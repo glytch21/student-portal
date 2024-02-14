@@ -4,6 +4,7 @@ import React from 'react'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import supabase from "@/config/client";
+import bcrypt from 'bcryptjs';
 
 const page = () => {
   const [username, setusername] = useState<string>();
@@ -17,7 +18,7 @@ const page = () => {
     const { data, error } = await supabase
       .from('user_table')
       .select('user_name, user_password, role');
-  
+    
     // Check if there's any error fetching data
     if (error) {
       console.error('Error fetching data:', error.message);
@@ -28,11 +29,13 @@ const page = () => {
     if (data && data.length > 0) {
       // Find the user with the entered username
       const user = data.find((user: any) => user.user_name === username);
-  
+      
+
       // If the user is found
       if (user) {
         // Check if the password matches
-        if (user.user_password === password) {
+        const passwordMatch = await bcrypt.compare(password!, user.user_password);
+        if (passwordMatch) {
           // Redirect based on user's role
           if (user.role === 'student') {
             router.push('/studentportal/');

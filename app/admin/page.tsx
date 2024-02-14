@@ -17,14 +17,16 @@ const AdminPage = () => {
 
   const fetchData = async () => {
     try {
-      const { data, error } = await supabase.from('user_table').select('*');
+      const { data, error } = await supabase
+        .from('user_table')
+        .select('*');
       if (error) {
         throw error;
       }
       if (data) {
         // Separate users into teacher and student arrays
-        const teachers = data.filter((user:any) => user.role === 'teacher');
-        const students = data.filter((user:any) => user.role === 'student');
+        const teachers = data.filter((user: any) => user.role === 'teacher');
+        const students = data.filter((user: any) => user.role === 'student');
         setTeacherUsers(teachers);
         setStudentUsers(students);
       }
@@ -35,27 +37,25 @@ const AdminPage = () => {
 
   const handleAddUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!userName || !password || !role) {
-      setError('Please provide a username, password, and select a role.');
+    if (!userName || !password) {
+      setError('Please provide a username, and password');
       return;
     }
     try {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
-      const { data, error } = await supabase.from('user_table').insert([
-        { user_name: userName, user_password: hashedPassword, role: role }
-      ]);
-      if (error) {
-        throw error;
-      }
-      if (data) {
-        fetchData(); // Refresh the user list after adding a new user
-        // Clear the form fields after successful addition
-        setUserName('');
-        setPassword('');
-        setRole('student'); // Reset role to default 'student'
-        setError('');
-      }
+      const { data, error } = await supabase
+        .from('user_table')
+        .insert([
+          { user_name: userName, user_password: hashedPassword, role: role }
+        ]);
+      alert('success')
+      fetchData();
+      // Clear the form fields after successful addition
+      setUserName('');
+      setPassword('');
+      setRole('student');
+      setError('');
     } catch (error) {
       console.error('Error adding user:', error);
     }

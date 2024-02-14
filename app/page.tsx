@@ -38,6 +38,8 @@ const page = () => {
             router.push('/studentportal/');
           } else if (user.role === 'teacher') {
             router.push('/teachersportal/');
+          } else if (user.role === 'admin') {
+            router.push('/admin/');
           } else {
             // Handle other roles if necessary
             alert('Invalid role');

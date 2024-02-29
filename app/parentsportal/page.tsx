@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import supabase from '@/config/client';
+
 interface UserData {
   first_name: string;
   // Add other properties here based on your user data structure
 }
-const LoginPage = () => {
+
+const ParentPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [sessionCookie, setSessionCookie] = useState('');
 
@@ -46,12 +48,12 @@ const LoginPage = () => {
     };
 
     fetchUserData();
-  }, []); // Run only once on component mount
+  }, []);
 
   const handleLogout = () => {
     // Clear the session cookie by setting its expiration date to a past time
     document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    // Redirect the user to the login page
+    // Reload the page to redirect the user to the login page
     window.location.href = '/';
   };
 
@@ -61,19 +63,23 @@ const LoginPage = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-
-        {userData && (
-          <div style={{ marginBottom: '10px' }}>
-            <p>Hi {userData.first_name}</p>
+    <div className='flex justify-center items-center h-screen'>
+      {sessionCookie ? (
+        userData ? (
+          <div className='mb-[10px]'>
+            <p>Parent {userData.first_name}</p>
+            <button onClick={handleTest}>Test</button>
+            <button onClick={handleLogout}>Logout</button>
           </div>
-        )}
-
-        <button onClick={handleTest}>test</button>
-        <button onClick={handleLogout}>Logout</button>
-
+        ) : (
+          <p>Loading...</p>
+        )
+      ) : (
+        <p>Error: Session cookie not found. Please log in.</p>
+      )}
     </div>
   );
 };
 
-export default LoginPage;
+export default ParentPage;
+

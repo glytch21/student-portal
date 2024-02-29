@@ -71,23 +71,23 @@ const page = () => {
 
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <form onSubmit={handleLogin} style={{ backgroundColor: '#f9f9f9', borderRadius: '8px', padding: '20px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}>
+    <div className='flex justify-center items-center h-screen'>
+      <form onSubmit={handleLogin} className='bg-[#f9f9f9] rounded-[8px] p-[20px] shadow-md'>
         <input
           type="text"
           placeholder="Username"
           value={id}
           onChange={(e) => setid(e.target.value)}
-          style={{ width: '100%', padding: '10px', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '16px' }}
+          className='w-full p-[10px] mb-[15px] border border-[#ccc] rounded-[4px] text-base'
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setpassword(e.target.value)}
-          style={{ width: '100%', padding: '10px', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '16px' }}
+          className='w-full p-[10px] mb-[15px] border border-[#ccc] rounded-[4px] text-base'
         />
-        <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '16px', cursor: 'pointer' }}>Login</button>
+        <button type="submit" className='w-full p-[10px] bg-[#007bff] text-[#fff] border-none rounded-[4px] text-base cursor-pointer'>Login</button>
       </form>
       <button onClick={handleTry}> test</button>
     </div>

@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import supabase from '@/config/client';
 
 const LoginPage = () => {
-  const [userData, setUserData] = useState(null);
-  const [sessionCookie, setSessionCookie] = useState('');
+  const [userData, setUserData] = useState<any>(null);
+  const [sessionCookie, setSessionCookie] = useState<any>('');
 
   useEffect(() => {
     // Function to retrieve the value of the session cookie
@@ -18,26 +18,28 @@ const LoginPage = () => {
     };
 
     // Set the value of the session cookie in state
-    const cookieValue = getSessionCookie();
+    const cookieValue:any = getSessionCookie();
     setSessionCookie(cookieValue);
 
     // Fetch user data from Supabase using the user_ID stored in the session cookie
     const fetchUserData = async () => {
       if (cookieValue) {
         try {
-          const { data, error } = await supabase
+          const { data, error }:any = await supabase
             .from('user_table')
             .select('*')
             .eq('user_id', cookieValue)
             .single();
           if (error) {
+            console.log(error)
             throw error;
           }
           if (data) {
             setUserData(data);
+            console.log('success')
           }
         } catch (error) {
-          console.error('Error fetching user data:', error.message);
+          console.error('Error fetching user data:', error);
         }
       }
     };
@@ -51,10 +53,10 @@ const LoginPage = () => {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div className='flex justify-center items-center h-screen'>
 
         {userData && (
-          <div style={{ marginBottom: '10px' }}>
+          <div className='mb-[10px]'>
             <p>Hi {userData.first_name}</p>
           </div>
         )}

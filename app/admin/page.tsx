@@ -33,7 +33,6 @@ const AdminPage = () => {
         throw error;
       }
       if (data) {
-        // Separate users into teacher and student arrays
         const teachers = data.filter((user: any) => user.role === 'teacher');
         const students = data.filter((user: any) => user.role === 'student');
         setTeacherUsers(teachers);
@@ -43,11 +42,6 @@ const AdminPage = () => {
       console.error('Error fetching data:', error);
     }
   };
-
-  const handleTest = async (e: any) => {
-    e.preventDefault();
-    router.push('/admin/students/')
-  }
 
   const toggleTeachersTable = () => {
     setShowTeachers(!showTeachers);
@@ -64,7 +58,6 @@ const AdminPage = () => {
       return;
     }
     try {
-      // Check if the user ID already exists
       const { data: existingUser, error } = await supabase
         .from('user_table')
         .select('user_id')
@@ -74,7 +67,6 @@ const AdminPage = () => {
         setError('User ID already exists. Please choose a different one.');
         return;
       }
-      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       const { data, error: insertionError } = await supabase
         .from('user_table')
@@ -93,7 +85,6 @@ const AdminPage = () => {
       }
       alert('success')
       fetchData();
-      // Clear the form fields after successful addition
       setID('');
       setPassword('');
       setFirstName('');
@@ -107,93 +98,97 @@ const AdminPage = () => {
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif' }}>
-      <div style={{ marginBottom: '20px', fontSize: '1.5em' }}>Admin</div>
-      <form onSubmit={handleAddUser} style={{ marginBottom: '20px' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="userID">User ID:</label>
-          <input
-            type="text"
-            id="userID"
-            value={userID}
-            onChange={(e) => setID(e.target.value)}
-            style={{ marginLeft: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ccc' }}
-          />
+    <div className="max-w-4xl mx-auto p-6">
+      <div className='mb-6 text-3xl font-semibold'>Admin</div>
+      <form onSubmit={handleAddUser} className='mb-8'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+          <div>
+            <label htmlFor="userID" className="block mb-1">User ID:</label>
+            <input
+              type="text"
+              id="userID"
+              value={userID}
+              onChange={(e) => setID(e.target.value)}
+              className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block mb-1">Password:</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+            />
+          </div>
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ marginLeft: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ccc' }}
-          />
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-4'>
+          <div>
+            <label htmlFor="firstName" className="block mb-1">First Name:</label>
+            <input
+              type="text"
+              id="firstName"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+            />
+          </div>
+          <div>
+            <label htmlFor="middleName" className="block mb-1">Middle Name:</label>
+            <input
+              type="text"
+              id="middleName"
+              value={middleName}
+              onChange={(e) => setMiddleName(e.target.value)}
+              className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+            />
+          </div>
+          <div>
+            <label htmlFor="lastName" className="block mb-1">Last Name:</label>
+            <input
+              type="text"
+              id="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+            />
+          </div>
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="firstName">First Name:</label>
-          <input
-            type="text"
-            id="firstName"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            style={{ marginLeft: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ccc' }}
-          />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="middleName">Middle Name:</label>
-          <input
-            type="text"
-            id="middleName"
-            value={middleName}
-            onChange={(e) => setMiddleName(e.target.value)}
-            style={{ marginLeft: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ccc' }}
-          />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="lastName">Last Name:</label>
-          <input
-            type="text"
-            id="lastName"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            style={{ marginLeft: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ccc' }}
-          />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="role">Role:</label>
+        <div className='mb-4'>
+          <label htmlFor="role" className="block mb-1">Role:</label>
           <select
             id="role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            style={{ marginLeft: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ccc' }}
+            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
           >
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
             <option value="parent">Parent</option>
           </select>
         </div>
-        <button type="submit" style={{ marginLeft: '10px', padding: '8px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Add User</button>
-        {error && <p style={{ color: 'red', marginLeft: '10px', marginTop: '5px' }}>{error}</p>}
+        <button type="submit" className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>Add User</button>
+        {error && <p className='text-red-600 mt-2'>{error}</p>}
       </form>
 
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={toggleTeachersTable} style={{ marginBottom: '10px', padding: '8px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+      <div className='mb-8'>
+        <button onClick={toggleTeachersTable} className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>
           {showTeachers ? 'Hide Teachers Table' : 'Show Teachers Table'}
         </button>
         {showTeachers && (
-          <table style={{ border: '1px solid black', borderCollapse: 'collapse', marginBottom: '20px', width: '100%' }}>
+          <table className='border border-black border-collapse mt-4 w-full'>
             <TeachersTable teacherUsers={teacherUsers} />
           </table>
         )}
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={toggleStudentsTable} style={{ marginBottom: '10px', padding: '8px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+      <div>
+        <button onClick={toggleStudentsTable} className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>
           {showStudents ? 'Hide Students Table' : 'Show Students Table'}
         </button>
         {showStudents && (
-          <table style={{ border: '1px solid black', borderCollapse: 'collapse', marginBottom: '20px', width: '100%' }}>
+          <table className='border border-black border-collapse mt-4 w-full'>
             <StudentsTable studentUsers={studentUsers} />
           </table>
         )}

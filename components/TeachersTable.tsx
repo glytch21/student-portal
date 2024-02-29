@@ -1,28 +1,48 @@
 import React from 'react';
 
-const TeachersTable = ({ teacherUsers }:any) => {
+const TeachersTable = ({ teacherUsers }: any) => {
   return (
-    <div className='mb-[20px]'>
-      <table className='border border-black border-collapse mb-[20px] w-full'>
-        <thead>
-          <tr>
-            <th className='border border-black p-[8px]'>User ID</th>
-            <th className='border border-black p-[8px]'>First Name</th>
-            <th className='border border-black p-[8px]'>Middle Name</th>
-            <th className='border border-black p-[8px]'>Last Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {teacherUsers.map((user:any) => (
-            <tr key={user.user_id}>
-              <td className='border border-black p-[8px]'>{user.user_id}</td>
-              <td className='border border-black p-[8px]'>{user.first_name}</td>
-              <td className='border border-black p-[8px]'>{user.middle_name}</td>
-              <td className='border border-black p-[8px]'>{user.last_name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="mb-8">
+      <div className="overflow-x-auto">
+        <div className="align-middle inline-block min-w-full border border-gray-200 shadow rounded-lg">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User ID
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  First Name
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Middle Name
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Last Name
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {teacherUsers.map((user: any) => (
+                <tr key={user.user_id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {user.user_id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {user.first_name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {user.middle_name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {user.last_name}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

@@ -38,7 +38,6 @@ const page = () => {
             } else if (data.role === 'admin') {
               router.push('/admin');
             } else {
-              // Handle unknown role
               console.error('Unknown role:', data.role);
             }
           }

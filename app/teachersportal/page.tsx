@@ -51,9 +51,7 @@ const TeachersPage = () => {
   }, []);
 
   const handleLogout = () => {
-    // Clear the session cookie by setting its expiration date to a past time
     document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    // Reload the page to redirect the user to the login page
     window.location.href = '/';
   };
 

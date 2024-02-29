@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { useRouter } from "next/navigation";
 import TeachersTable from "@/components/TeachersTable";
 import StudentsTable from '@/components/StudentsTable';
+import ParentsTable from '@/components/ParentsTable'; 
 interface UserData {
   first_name: string;
   // Add other properties here based on your user data structure
@@ -12,6 +13,7 @@ interface UserData {
 const AdminPage = () => {
   const [teacherUsers, setTeacherUsers] = useState<any[]>([]);
   const [studentUsers, setStudentUsers] = useState<any[]>([]);
+  const [parentUsers, setParentUsers] = useState<any[]>([]); 
   const [userID, setID] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -21,6 +23,7 @@ const AdminPage = () => {
   const [error, setError] = useState('');
   const [showTeachers, setShowTeachers] = useState(false);
   const [showStudents, setShowStudents] = useState(false);
+  const [showParents, setShowParents] = useState(false); 
   const [userData, setUserData] = useState<UserData | null>(null);
   const [sessionCookie, setSessionCookie] = useState('');
   const router = useRouter();
@@ -67,7 +70,6 @@ const AdminPage = () => {
   const handleLogout = () => {
     // Clear the session cookie by setting its expiration date to a past time
     document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    // Redirect the user to the login page
     window.location.href = '/';
   };
 
@@ -80,11 +82,37 @@ const AdminPage = () => {
         throw error;
       }
       if (data) {
-        // Separate users into teacher and student arrays
+        // Separate users into teacher, student, and parent arrays
         const teachers = data.filter((user: any) => user.role === 'teacher');
         const students = data.filter((user: any) => user.role === 'student');
+        const parents = data.filter((user: any) => user.role === 'parent');
+
+        // Fetch child data for each parent
+        const parentsWithChildren = await Promise.all(parents.map(async (parent: any) => {
+          if (parent.children) {
+            const childrenIds = parent.children.split(',').map((id: string) => id.trim());
+            const childrenData = await Promise.all(childrenIds.map(async (childId: string) => {
+              const { data: child, error: childError } = await supabase
+                .from('user_table')
+                .select('*')
+                .eq('user_id', childId)
+                .single();
+              if (childError) {
+                console.error(`Error fetching child data for parent ${parent.user_id}:`, childError);
+              }
+              return child;
+            }));
+            return {
+              ...parent,
+              children: childrenData.filter(Boolean), // Filter out any undefined children
+            };
+          }
+          return parent;
+        }));
+
         setTeacherUsers(teachers);
         setStudentUsers(students);
+        setParentUsers(parentsWithChildren);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -93,7 +121,7 @@ const AdminPage = () => {
 
   const handleTest = async (e: any) => {
     e.preventDefault();
-    router.push('/admin/students/')
+    console.log('parents', parentUsers);
   }
 
   const toggleTeachersTable = () => {
@@ -102,6 +130,10 @@ const AdminPage = () => {
 
   const toggleStudentsTable = () => {
     setShowStudents(!showStudents);
+  };
+
+  const toggleParentsTable = () => { 
+    setShowParents(!showParents);
   };
 
   const handleAddUser = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -231,7 +263,8 @@ const AdminPage = () => {
             <button type="submit" className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>Add User</button>
             {error && <p className='text-red-600 mt-2'>{error}</p>}
           </form>
-  
+
+          {/* Teachers Table */}
           <div className='mb-8'>
             <button onClick={toggleTeachersTable} className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>
               {showTeachers ? 'Hide Teachers Table' : 'Show Teachers Table'}
@@ -242,7 +275,8 @@ const AdminPage = () => {
               </div>
             )}
           </div>
-  
+
+          {/* Students Table */}
           <div>
             <button onClick={toggleStudentsTable} className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>
               {showStudents ? 'Hide Students Table' : 'Show Students Table'}
@@ -253,14 +287,27 @@ const AdminPage = () => {
               </div>
             )}
           </div>
+
+          {/* Parents Table */}
+          <div className='mb-8'>
+            <button onClick={toggleParentsTable} className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>
+              {showParents ? 'Hide Parents Table' : 'Show Parents Table'}
+            </button>
+            {showParents && (
+              <div className='border border-black border-collapse mt-4 w-full'>
+                <ParentsTable parentUsers={parentUsers} />
+              </div>
+            )}
+          </div>
           <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleTest}>test</button>
         </>
       ) : (
         <div className="text-red-600">No session cookie found.</div>
       )}
     </div>
   );
-  
+
 };
 
 export default AdminPage;

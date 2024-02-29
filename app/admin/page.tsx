@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import supabase from '@/config/client';
 import bcrypt from 'bcryptjs';
 import { useRouter } from "next/navigation";
-import TeachersTable from "@/components/TeachersTable";
-import StudentsTable from '@/components/StudentsTable';
+import TeachersTable from "@/Components/TeachersTable";
+import StudentsTable from '@/Components/StudentsTable';
 
 const AdminPage = () => {
   const [teacherUsers, setTeacherUsers] = useState<any[]>([]);
@@ -33,6 +33,7 @@ const AdminPage = () => {
         throw error;
       }
       if (data) {
+        // Separate users into teacher and student arrays
         const teachers = data.filter((user: any) => user.role === 'teacher');
         const students = data.filter((user: any) => user.role === 'student');
         setTeacherUsers(teachers);
@@ -42,6 +43,11 @@ const AdminPage = () => {
       console.error('Error fetching data:', error);
     }
   };
+
+  const handleTest = async (e: any) => {
+    e.preventDefault();
+    router.push('/admin/students/')
+  }
 
   const toggleTeachersTable = () => {
     setShowTeachers(!showTeachers);
@@ -58,6 +64,7 @@ const AdminPage = () => {
       return;
     }
     try {
+      // Check if the user ID already exists
       const { data: existingUser, error } = await supabase
         .from('user_table')
         .select('user_id')
@@ -67,6 +74,7 @@ const AdminPage = () => {
         setError('User ID already exists. Please choose a different one.');
         return;
       }
+      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       const { data, error: insertionError } = await supabase
         .from('user_table')
@@ -85,6 +93,7 @@ const AdminPage = () => {
       }
       alert('success')
       fetchData();
+      // Clear the form fields after successful addition
       setID('');
       setPassword('');
       setFirstName('');

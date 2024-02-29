@@ -1,14 +1,13 @@
 "use client";
 
-import React from 'react'
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import supabase from "@/config/client";
 import bcrypt from 'bcryptjs';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const page = () => {
-  const [id, setid] = useState<string>();
-  const [password, setpassword] = useState<string>();
+  const [id, setId] = useState<string>();
+  const [password, setPassword] = useState<string>();
   const router = useRouter();
 
   const handleTry = async (e: any) => {
@@ -79,7 +78,7 @@ const page = () => {
             type="text"
             placeholder="Username"
             value={id}
-            onChange={(e) => setid(e.target.value)}
+            onChange={(e) => setId(e.target.value)}
             className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
           />
         </div>
@@ -88,7 +87,7 @@ const page = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setpassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
           />
         </div>

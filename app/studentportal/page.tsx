@@ -31,12 +31,10 @@ const LoginPage = () => {
             .eq('user_id', cookieValue)
             .single();
           if (error) {
-            console.log(error)
             throw error;
           }
           if (data) {
             setUserData(data);
-            console.log('success')
           }
         } catch (error) {
           console.error('Error fetching user data:', error);

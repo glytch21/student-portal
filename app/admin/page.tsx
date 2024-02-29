@@ -186,9 +186,9 @@ const AdminPage = () => {
           {showTeachers ? 'Hide Teachers Table' : 'Show Teachers Table'}
         </button>
         {showTeachers && (
-          <table className='border border-black border-collapse mt-4 w-full'>
+          <div className='border border-black border-collapse mt-4 w-full'>
             <TeachersTable teacherUsers={teacherUsers} />
-          </table>
+          </div>
         )}
       </div>
 
@@ -197,9 +197,9 @@ const AdminPage = () => {
           {showStudents ? 'Hide Students Table' : 'Show Students Table'}
         </button>
         {showStudents && (
-          <table className='border border-black border-collapse mt-4 w-full'>
+          <div className='border border-black border-collapse mt-4 w-full'>
             <StudentsTable studentUsers={studentUsers} />
-          </table>
+          </div>
         )}
       </div>
 

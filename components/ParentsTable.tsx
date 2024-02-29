@@ -19,6 +19,8 @@ const ParentsTable = ({ parentUsers }: any) => {
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Last Name
+                </th><th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Contact Number
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Children
@@ -41,6 +43,9 @@ const ParentsTable = ({ parentUsers }: any) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {user.last_name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {user.contact_number}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {user.children[0].first_name} {user.children[0].middle_name} {user.children[0].last_name}

@@ -21,6 +21,9 @@ const StudentsTable = ({ studentUsers }: any) => {
                   Last Name
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Contact Number
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Parent
                 </th>
               </tr>
@@ -39,6 +42,9 @@ const StudentsTable = ({ studentUsers }: any) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {user.children[0].last_name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {user.children[0].contact_number}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {user.first_name} {user.middle_name} {user.last_name}

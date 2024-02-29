@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import TeachersTable from "@/components/TeachersTable";
 import StudentsTable from '@/components/StudentsTable';
 import ParentsTable from '@/components/ParentsTable'; 
+
 interface UserData {
   first_name: string;
-  // Add other properties here based on your user data structure
 }
+
 const AdminPage = () => {
   const [teacherUsers, setTeacherUsers] = useState<any[]>([]);
   const [studentUsers, setStudentUsers] = useState<any[]>([]);
@@ -20,6 +21,7 @@ const AdminPage = () => {
   const [middleName, setMiddleName] = useState('');
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState('student');
+  const [childID, setChildID] = useState('');
   const [error, setError] = useState('');
   const [showTeachers, setShowTeachers] = useState(false);
   const [showStudents, setShowStudents] = useState(false);
@@ -58,7 +60,7 @@ const AdminPage = () => {
             setUserData(data);
           }
         } catch (error) {
-          console.error('Error fetching user data:');
+          console.error('Error fetching user data:', error);
         }
       }
     };
@@ -153,6 +155,18 @@ const AdminPage = () => {
         setError('User ID already exists. Please choose a different one.');
         return;
       }
+      // If role is parent, check if the child ID exists
+      if (role === 'parent') {
+        const { data: childUser } = await supabase
+          .from('user_table')
+          .select('*')
+          .eq('user_id', childID)
+          .single();
+        if (!childUser) {
+          setError('Child user does not exist.');
+          return;
+        }
+      }
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       const { data, error: insertionError } = await supabase
@@ -164,7 +178,8 @@ const AdminPage = () => {
             first_name: firstName,
             middle_name: middleName,
             last_name: lastName,
-            role: role
+            role: role,
+            children: childID
           }
         ]);
       if (insertionError) {
@@ -179,6 +194,7 @@ const AdminPage = () => {
       setMiddleName('');
       setLastName('');
       setRole('student');
+      setChildID('');
       setError('');
     } catch (error) {
       console.error('Error adding user:', error);
@@ -189,9 +205,12 @@ const AdminPage = () => {
     <div className="max-w-4xl mx-auto p-6">
       {sessionCookie ? (
         <>
-          {userData && (
+          {userData ? (
             <div className='mb-6 text-3xl font-semibold'>Admin {userData.first_name}</div>
+          ) : (
+            <p>Loading...</p>
           )}
+          
           <form onSubmit={handleAddUser} className='mb-8'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
               <div>
@@ -260,6 +279,20 @@ const AdminPage = () => {
                 <option value="parent">Parent</option>
               </select>
             </div>
+            {/* Show child ID input field if role is parent */}
+            {role === 'parent' && (
+              <div className='mb-4'>
+                <label htmlFor="childID" className="block mb-1">Child's ID:</label>
+                <input
+                  placeholder='Existing Student ID'
+                  type="text"
+                  id="childID"
+                  value={childID}
+                  onChange={(e) => setChildID(e.target.value)}
+                  className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+                />
+              </div>
+            )}
             <button type="submit" className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>Add User</button>
             {error && <p className='text-red-600 mt-2'>{error}</p>}
           </form>
@@ -302,6 +335,7 @@ const AdminPage = () => {
           <button onClick={handleLogout}>Logout</button>
           <button onClick={handleTest}>test</button>
         </>
+        
       ) : (
         <div className="text-red-600">No session cookie found.</div>
       )}

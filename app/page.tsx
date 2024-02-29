@@ -72,26 +72,30 @@ const page = () => {
 
   return (
     <div className='flex justify-center items-center h-screen'>
-      <form onSubmit={handleLogin} className='bg-[#f9f9f9] rounded-[8px] p-[20px] shadow-md'>
-        <input
-          type="text"
-          placeholder="Username"
-          value={id}
-          onChange={(e) => setid(e.target.value)}
-          className='w-full p-[10px] mb-[15px] border border-[#ccc] rounded-[4px] text-base'
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setpassword(e.target.value)}
-          className='w-full p-[10px] mb-[15px] border border-[#ccc] rounded-[4px] text-base'
-        />
-        <button type="submit" className='w-full p-[10px] bg-[#007bff] text-[#fff] border-none rounded-[4px] text-base cursor-pointer'>Login</button>
+      <form onSubmit={handleLogin} className='bg-white rounded-lg shadow-md p-8'>
+        <h2 className='text-2xl font-semibold mb-4'>Login</h2>
+        <div className='mb-4'>
+          <input
+            type="text"
+            placeholder="Username"
+            value={id}
+            onChange={(e) => setid(e.target.value)}
+            className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+          />
+        </div>
+        <div className='mb-4'>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setpassword(e.target.value)}
+            className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+          />
+        </div>
+        <button type="submit" className='w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'>Login</button>
       </form>
-      <button onClick={handleTry}> test</button>
     </div>
-  )
+  );
 }
 
 export default page

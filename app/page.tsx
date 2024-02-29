@@ -3,16 +3,56 @@
 import supabase from "@/config/client";
 import bcrypt from 'bcryptjs';
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const page = () => {
   const [id, setId] = useState<string>();
   const [password, setPassword] = useState<string>();
   const router = useRouter();
 
+  useEffect(() => {
+    const sessionCookie = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('session='))
+      ?.split('=')[1];
+
+    if (sessionCookie) {
+      const fetchUserData = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('user_table')
+            .select('role')
+            .eq('user_id', sessionCookie)
+            .single();
+          if (error) {
+            throw error;
+          }
+          if (data) {
+            // Redirect the user to the appropriate page based on their role
+            if (data.role === 'student') {
+              router.push('/studentportal');
+            } else if (data.role === 'teacher') {
+              router.push('/teachersportal');
+            } else if (data.role === 'parent') {
+              router.push('/parentsportal');
+            } else if (data.role === 'admin') {
+              router.push('/admin');
+            } else {
+              // Handle unknown role
+              console.error('Unknown role:', data.role);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [router]);
+
   const handleTry = async (e: any) => {
     e.preventDefault();
-    router.push('/example/')
   }
 
   const handleLogin = async (e: any) => {

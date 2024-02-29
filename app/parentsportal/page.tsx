@@ -5,11 +5,16 @@ import supabase from '@/config/client';
 
 interface UserData {
   first_name: string;
-  // Add other properties here based on your user data structure
 }
+interface ChildData {
+  first_name: string;
+}
+
 
 const ParentPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [childData, setChildData] = useState<ChildData | null>(null);
+  const [childID, setChildID] = useState(null);
   const [sessionCookie, setSessionCookie] = useState('');
 
   useEffect(() => {
@@ -40,13 +45,38 @@ const ParentPage = () => {
           }
           if (data) {
             setUserData(data);
+            setChildID(data.children);
+
+            if (data.children){
+              fetchChildrenData(data.children);
+            }
           }
         } catch (error) {
           console.error('Error fetching user data:');
         }
       }
     };
+    const fetchChildrenData = async (childID:any) => {
+      if (cookieValue && childID) {
+        try {
+          const { data, error } = await supabase
+            .from('user_table')
+            .select('*')
+            .eq('user_id', childID)
+            .single();
+          if (error) {
+            throw error;
+          }
+          if (data) {
+            setChildData(data);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:');
+        }
+      }
+    }
 
+    
     fetchUserData();
   }, []);
 
@@ -60,14 +90,18 @@ const ParentPage = () => {
   const handleTest = async (e: any) => {
     e.preventDefault();
     console.log('hehe', userData);
+    console.log('child', childID);
+    console.log('data', childData);
+    console.log('cookie', sessionCookie);
   };
 
   return (
     <div className='flex justify-center items-center h-screen'>
       {sessionCookie ? (
-        userData ? (
+        userData && childData ? (
           <div className='mb-[10px]'>
             <p>Parent {userData.first_name}</p>
+            <p>Child {childData.first_name}</p>
             <button onClick={handleTest}>Test</button>
             <button onClick={handleLogout}>Logout</button>
           </div>
@@ -77,6 +111,7 @@ const ParentPage = () => {
       ) : (
         <p>Error: Session cookie not found. Please log in.</p>
       )}
+      
     </div>
   );
 };

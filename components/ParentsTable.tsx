@@ -21,7 +21,7 @@ const ParentsTable = ({ parentUsers }: any) => {
                   Last Name
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Child
+                  Children
                 </th><th className="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Child ID
                 </th>

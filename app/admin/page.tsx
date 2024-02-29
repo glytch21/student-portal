@@ -283,7 +283,7 @@ const AdminPage = () => {
             </button>
             {showStudents && (
               <div className='border border-black border-collapse mt-4 w-full'>
-                <StudentsTable studentUsers={studentUsers} />
+                <StudentsTable studentUsers={parentUsers} />
               </div>
             )}
           </div>

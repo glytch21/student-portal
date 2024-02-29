@@ -2,10 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 import supabase from '@/config/client';
-
+interface UserData {
+  first_name: string;
+  // Add other properties here based on your user data structure
+}
 const LoginPage = () => {
+<<<<<<< Updated upstream
   const [userData, setUserData] = useState<any>(null);
   const [sessionCookie, setSessionCookie] = useState<any>('');
+=======
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [sessionCookie, setSessionCookie] = useState('');
+>>>>>>> Stashed changes
 
   useEffect(() => {
     // Function to retrieve the value of the session cookie
@@ -37,7 +45,11 @@ const LoginPage = () => {
             setUserData(data);
           }
         } catch (error) {
+<<<<<<< Updated upstream
           console.error('Error fetching user data:', error);
+=======
+          console.error('Error fetching user data:');
+>>>>>>> Stashed changes
         }
       }
     };
@@ -45,10 +57,17 @@ const LoginPage = () => {
     fetchUserData();
   }, []); // Run only once on component mount
 
-  const handleTest= async (e: any) => {
+  const handleLogout = () => {
+    // Clear the session cookie by setting its expiration date to a past time
+    document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    // Redirect the user to the login page
+    window.location.href = '/';
+  };
+
+  const handleTest = async (e: any) => {
     e.preventDefault();
     console.log('hehe', userData);
-  }
+  };
 
   return (
     <div className='flex justify-center items-center h-screen'>
@@ -60,6 +79,7 @@ const LoginPage = () => {
         )}
 
         <button onClick={handleTest}>test</button>
+        <button onClick={handleLogout}>Logout</button>
 
     </div>
   );

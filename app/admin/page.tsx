@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import supabase from '@/config/client';
 import bcrypt from 'bcryptjs';
 import { useRouter } from "next/navigation";
-import TeachersTable from "@/components/TeachersTable";
-import StudentsTable from '@/components/StudentsTable';
-import ParentsTable from '@/components/ParentsTable'; 
+import TeachersTable from "@/Components/TeachersTable";
+import StudentsTable from '@/Components/StudentsTable';
+import ParentsTable from '@/Components/ParentsTable'; 
 
 interface UserData {
   first_name: string;
@@ -310,7 +310,7 @@ const AdminPage = () => {
           </div>
 
           {/* Students Table */}
-          <div>
+          <div className='mb-8'>
             <button onClick={toggleStudentsTable} className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>
               {showStudents ? 'Hide Students Table' : 'Show Students Table'}
             </button>
@@ -332,7 +332,7 @@ const AdminPage = () => {
               </div>
             )}
           </div>
-          <button onClick={handleLogout}>Logout</button>
+          <button className='border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2' onClick={handleLogout}>Logout</button>
           <button onClick={handleTest}>test</button>
         </>
         

@@ -72,34 +72,34 @@ const TeachersPage = () => {
       {isSidebarOpen && (
         <div className='bg-gray-200 h-full w-20 flex flex-col justify-between items-center'>
           <div>
-            <p className='text-center text-gray-700 font-semibold mt-2'>Teacher</p>
+            <p className='text-center text-gray-700 font-semibold mt-2'>Profile</p>
             <button onClick={() => handleSubjectClick('Subject 1')} className='py-1 px-2 my-2 bg-gray-400 rounded text-sm'>Subject 1</button>
             <button onClick={() => handleSubjectClick('Subject 2')} className='py-1 px-2 my-2 bg-gray-400 rounded text-sm'>Subject 2</button>
           </div>
-          <button onClick={handleLogout} className='w-full py-2 bg-red-500 text-white rounded-b'>
+          {/* Logout button */}
+          <button onClick={handleLogout} className='py-1 px-2 bg-red-500 text-white rounded text-sm mt-auto'>
             Logout
           </button>
         </div>
       )}
-
+  
       {/* Main content */}
       <div className='flex-1'>
         {/* Toggle button for the sidebar */}
         <button onClick={toggleSidebar} className='bg-gray-200 px-4 py-2 text-sm'>
-          {isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+          {isSidebarOpen ? '<<<' : '>>>'}
         </button>
-
+  
         {/* Display selected subject */}
         {selectedSubject && (
           <p className='text-center mt-4'>{selectedSubject}</p>
         )}
-
+  
         {sessionCookie ? (
           userData ? (
             <div className='mb-10 text-center'>
               <p className='text-xl font-semibold mb-4'>Teacher {userData.first_name}</p>
               <button onClick={handleTest} className='px-2 py-1 bg-blue-500 text-white rounded mr-2 text-sm'>Test</button>
-              <button onClick={handleLogout} className='px-2 py-1 bg-red-500 text-white rounded text-sm'>Logout</button>
             </div>
           ) : (
             <p>Loading...</p>
@@ -110,6 +110,7 @@ const TeachersPage = () => {
       </div>
     </div>
   );
+  
 };
 
 export default TeachersPage;

@@ -5,15 +5,15 @@ import supabase from '@/config/client';
 
 interface UserData {
   first_name: string;
-  // Add other properties here based on your user data structure
 }
 
-const StudentPage = () => {
+const TeachersPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [sessionCookie, setSessionCookie] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State to control sidebar visibility
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(null); // State to store selected subject
 
   useEffect(() => {
-    // Function to retrieve the value of the session cookie
     const getSessionCookie = () => {
       const cookie = document.cookie
         .split('; ')
@@ -22,11 +22,9 @@ const StudentPage = () => {
       return cookie || '';
     };
 
-    // Set the value of the session cookie in state
     const cookieValue = getSessionCookie();
     setSessionCookie(cookieValue);
 
-    // Fetch user data from Supabase using the user_ID stored in the session cookie
     const fetchUserData = async () => {
       if (cookieValue) {
         try {
@@ -42,7 +40,7 @@ const StudentPage = () => {
             setUserData(data);
           }
         } catch (error) {
-          console.error('Error fetching user data:');
+          console.error('Error fetching user data:', error);
         }
       }
     };
@@ -51,9 +49,7 @@ const StudentPage = () => {
   }, []);
 
   const handleLogout = () => {
-    // Clear the session cookie by setting its expiration date to a past time
     document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    // Reload the page to redirect the user to the login page
     window.location.href = '/';
   };
 
@@ -62,24 +58,70 @@ const StudentPage = () => {
     console.log('hehe', userData);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(prevState => !prevState);
+  };
+
+  const handleSubjectClick = (subject: string) => {
+    setSelectedSubject(subject);
+  };
+
   return (
-    <div className='flex justify-center items-center h-screen'>
-      {sessionCookie ? (
-        userData ? (
-          <div className='mb-[10px]'>
-            <p>Hi {userData.first_name}</p>
-            <button onClick={handleTest}>Test</button>
-            <button onClick={handleLogout}>Logout</button>
+    <div className='flex h-screen'>
+      {/* Sidebar */}
+      {isSidebarOpen && (
+        <div className='bg-gray-200 h-full w-20 flex flex-col justify-between items-center'>
+          <div>
+            <p className='text-center text-gray-700 font-semibold mt-2'>Profile</p>
+            <button onClick={() => handleSubjectClick('Subject 1')} className='py-1 px-2 my-2 bg-gray-400 rounded text-sm'>Subject 1</button>
+            <button onClick={() => handleSubjectClick('Subject 2')} className='py-1 px-2 my-2 bg-gray-400 rounded text-sm'>Subject 2</button>
           </div>
-        ) : (
-          <p>Loading...</p>
-        )
-      ) : (
-        <p>Error: Session cookie not found. Please log in.</p>
+          {/* Logout button */}
+          <button onClick={handleLogout} className='py-1 px-2 bg-red-500 text-white rounded text-sm mt-auto'>
+            Logout
+          </button>
+        </div>
       )}
+  
+      {/* Main content */}
+      <div className='flex-1'>
+        {/* Toggle button for the sidebar */}
+        <button onClick={toggleSidebar} className='bg-gray-200 px-4 py-2 text-sm'>
+          {isSidebarOpen ? '<<<' : '>>>'}
+        </button>
+  
+        {/* Display selected subject */}
+        {selectedSubject && (
+          <p className='text-center mt-4'>{selectedSubject}</p>
+        )}
+  
+        {sessionCookie ? (
+          userData ? (
+            <div className='mb-10 text-center'>
+              <p className='text-xl font-semibold mb-4'>Student {userData.first_name}</p>
+              <button onClick={handleTest} className='px-2 py-1 bg-blue-500 text-white rounded mr-2 text-sm'>Test</button>
+            </div>
+          ) : (
+            <p>Loading...</p>
+          )
+        ) : (
+          <p className='text-red-500'>Error: Session cookie not found. Please log in.</p>
+        )}
+      </div>
     </div>
   );
+  
 };
 
-export default StudentPage;
+export default TeachersPage;
+
+
+
+
+
+
+
+
+
+
 

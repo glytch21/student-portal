@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import supabase from '@/config/client';
 import bcrypt from 'bcryptjs';
 import { useRouter } from "next/navigation";
-import TeachersTable from "@/Components/TeachersTable";
-import StudentsTable from '@/Components/StudentsTable';
-import ParentsTable from '@/Components/ParentsTable'; 
+import TeachersTable from "@/components/TeachersTable";
+import StudentsTable from '@/components/StudentsTable';
+import ParentsTable from '@/components/ParentsTable';
 
 interface UserData {
   first_name: string;
@@ -14,7 +14,8 @@ interface UserData {
 const AdminPage = () => {
   const [teacherUsers, setTeacherUsers] = useState<any[]>([]);
   const [studentUsers, setStudentUsers] = useState<any[]>([]);
-  const [parentUsers, setParentUsers] = useState<any[]>([]); 
+  const [parentUsers, setParentUsers] = useState<any[]>([]);
+  const [allUsers, setallUsers] = useState<any[]>([]);
   const [userID, setID] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -25,9 +26,11 @@ const AdminPage = () => {
   const [error, setError] = useState('');
   const [showTeachers, setShowTeachers] = useState(false);
   const [showStudents, setShowStudents] = useState(false);
-  const [showParents, setShowParents] = useState(false); 
+  const [showParents, setShowParents] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [sessionCookie, setSessionCookie] = useState('');
+  const [deleteUserID, setDeleteUserID] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -88,6 +91,7 @@ const AdminPage = () => {
         const teachers = data.filter((user: any) => user.role === 'teacher');
         const students = data.filter((user: any) => user.role === 'student');
         const parents = data.filter((user: any) => user.role === 'parent');
+        setallUsers(data);
 
         // Fetch child data for each parent
         const parentsWithChildren = await Promise.all(parents.map(async (parent: any) => {
@@ -123,7 +127,7 @@ const AdminPage = () => {
 
   const handleTest = async (e: any) => {
     e.preventDefault();
-    console.log('parents', parentUsers);
+    console.log('all', allUsers);
   }
 
   const toggleTeachersTable = () => {
@@ -134,7 +138,7 @@ const AdminPage = () => {
     setShowStudents(!showStudents);
   };
 
-  const toggleParentsTable = () => { 
+  const toggleParentsTable = () => {
     setShowParents(!showParents);
   };
 
@@ -201,6 +205,37 @@ const AdminPage = () => {
     }
   };
 
+  const handleDeleteUser = async () => {
+    try {
+      const { data: userToDelete } = await supabase
+        .from('user_table')
+        .select('*')
+        .eq('user_id', deleteUserID)
+        .single();
+      if (!userToDelete) {
+        setError('User with given ID does not exist.');
+        return;
+      }
+      // Prompt for confirmation before deleting
+      const confirmation = window.confirm(`Are you sure you want to delete user ${deleteUserID}?`);
+      if (confirmation) {
+        const { error } = await supabase
+          .from('user_table')
+          .delete()
+          .eq('user_id', deleteUserID);
+        if (error) {
+          throw error;
+        }
+        alert('User deleted successfully');
+        fetchData();
+        setShowDeleteModal(false);
+        setDeleteUserID('');
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       {sessionCookie ? (
@@ -210,7 +245,7 @@ const AdminPage = () => {
           ) : (
             <p>Loading...</p>
           )}
-          
+
           <form onSubmit={handleAddUser} className='mb-8'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
               <div>
@@ -297,6 +332,27 @@ const AdminPage = () => {
             {error && <p className='text-red-600 mt-2'>{error}</p>}
           </form>
 
+          {/* Delete User section */}
+          <div className='mb-8'>
+            <button onClick={() => setShowDeleteModal(true)} className='px-4 py-2 bg-red-500 text-white rounded cursor-pointer'>
+              Delete User
+            </button>
+            {showDeleteModal && (
+              <div className='mt-4'>
+                <input
+                  type="text"
+                  placeholder="Enter User ID"
+                  value={deleteUserID}
+                  onChange={(e) => setDeleteUserID(e.target.value)}
+                  className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+                />
+                <button onClick={handleDeleteUser} className='px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2'>
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Teachers Table */}
           <div className='mb-8'>
             <button onClick={toggleTeachersTable} className='px-4 py-2 bg-blue-500 text-white rounded cursor-pointer'>
@@ -335,7 +391,7 @@ const AdminPage = () => {
           <button className='border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2' onClick={handleLogout}>Logout</button>
           <button onClick={handleTest}>test</button>
         </>
-        
+
       ) : (
         <div className="text-red-600">No session cookie found.</div>
       )}

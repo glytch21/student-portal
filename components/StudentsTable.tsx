@@ -32,7 +32,7 @@ const StudentsTable = ({ studentUsers }: any) => {
               {studentUsers.map((user: any) => (
                 <tr key={user.user_id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {user.user_id}
+                    {user.children[0].user_id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {user.children[0].first_name}

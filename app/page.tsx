@@ -110,30 +110,39 @@ const page = () => {
 
   return (
     <div className='flex justify-center items-center h-screen'>
-      <form onSubmit={handleLogin} className='bg-white rounded-lg shadow-md p-8'>
-        <h2 className='text-2xl font-semibold mb-4'>Login</h2>
-        <div className='mb-4'>
-          <input
-            type="text"
-            placeholder="Username"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
-          />
-        </div>
-        <div className='mb-4'>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
-          />
-        </div>
-        <button type="submit" className='w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'>Login</button>
-      </form>
+  
+      <div className="flex flex-col items-center justify-center">
+        {/* Form */}
+        <form onSubmit={handleLogin} className='bg-white rounded-lg shadow-md p-8 flex flex-col items-center'>
+          <div className="mb-8">
+            <img src="./img/school-logo.png" alt="school logo" className="w-40 h-50" />
+          </div>
+  
+          <div className='mb-4'>
+            <input
+              type="text"
+              placeholder="User ID"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+            />
+          </div>
+          <div className='mb-4'>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+            />
+          </div>
+          <button type="submit" className='w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'>Log In</button>
+        </form>
+      </div>
     </div>
   );
+  
+  
 }
 
 export default page

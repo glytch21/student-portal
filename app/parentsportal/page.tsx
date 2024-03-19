@@ -4,6 +4,7 @@ import supabase from '@/config/client';
 
 interface UserData {
   first_name: string;
+  profile_image: any;
 }
 
 interface ChildData {

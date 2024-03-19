@@ -31,6 +31,7 @@ const AdminPage = () => {
   const [sessionCookie, setSessionCookie] = useState('');
   const [deleteUserID, setDeleteUserID] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {

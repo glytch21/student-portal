@@ -90,7 +90,8 @@ const ProfilePicUpdateModal: React.FC<Props> = ({ onClose, userData }) => {
   };
 
 
-  return (
+  
+return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-4">Update Profile Picture</h2>
@@ -118,7 +119,6 @@ const ProfilePicUpdateModal: React.FC<Props> = ({ onClose, userData }) => {
       </div>
     </div>
   );
-
 };
 
 export default ProfilePicUpdateModal;

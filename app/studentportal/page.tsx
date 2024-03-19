@@ -64,8 +64,6 @@ const StudentsPage = () => {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'user_table' },
         (payload: { [key: string]: any }) => {
-          console.log('Change received!', payload);
-          // Update userData state with the new data from payload
           setUserData(payload.new);
         }
       )
@@ -112,7 +110,12 @@ const StudentsPage = () => {
           userData ? (
             <div className='mb-10 text-center'>
 
-              <Navbar onProfileClick={handleProfileClick} onGradesClick={handleGradesClick} role={userData.role}/>
+              <Navbar 
+              firstButtonClick={handleProfileClick} 
+              secondButtonClick={handleGradesClick} 
+              role={userData.role} 
+              />
+
               {selectedInfo === 'profile' && (
                 <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
                   {/* Display uploaded image if exists */}

@@ -1,19 +1,27 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import supabase from '@/config/client';
-import UpdateProfile from '@/components/UpdateProfile';
-import NavBar from '@/components/NavBar'
+import Navbar from '@/components/NavBar';
+import UpdateProfile from '@/components/UpdateProfile'
+import ProfilePicUpdateModal from '@/components/UpdateProfilePic';
 
 interface UserData {
   first_name: string;
+  last_name: string;
+  grade_level: string;
+  role: string;
   profile_image: any;
   contact_number: number;
+  address: string;
 }
 
 const StudentsPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [sessionCookie, setSessionCookie] = useState('');
+  const [selectedInfo, setSelectedInfo] = useState('profile'); // State to control which info to display
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false); // State to control modal visibility
+  const [isPicUpdateOpen, setIsPicUpdateOpen] = useState<boolean>(false);
   const [uploadMessage, setUploadMessage] = useState<string>('');
 
   useEffect(() => {
@@ -27,6 +35,7 @@ const StudentsPage = () => {
 
     const cookieValue = getSessionCookie();
     setSessionCookie(cookieValue);
+
 
     const fetchUserData = async () => {
       if (cookieValue) {
@@ -48,16 +57,32 @@ const StudentsPage = () => {
       }
     };
 
+
+    const userTable = supabase
+      .channel('custom-all-channel')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'user_table' },
+        (payload: { [key: string]: any }) => {
+          console.log('Change received!', payload);
+          // Update userData state with the new data from payload
+          setUserData(payload.new);
+        }
+      )
+      .subscribe();
+
     fetchUserData();
   }, []);
 
-  const handleLogout = () => {
-    document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    window.location.href = '/';
+
+
+  const handleProfileClick = () => {
+    setSelectedInfo('profile'); // Set selectedInfo to 'profile' when profile is clicked
   };
 
-
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false); // State to control modal visibility
+  const handleGradesClick = () => {
+    setSelectedInfo('grades');
+  };
 
   const handleOpenProfileModal = () => {
     setIsProfileModalOpen(true); // Open the modal
@@ -67,42 +92,75 @@ const StudentsPage = () => {
     setIsProfileModalOpen(false); // Close the modal
   };
 
+  const handleOpenPicUpdateModal = () => {
+    setIsPicUpdateOpen(true); // Open the modal
+  };
+
+  const handleClosePicUpdateModal = () => {
+    setIsPicUpdateOpen(false); // Close the modal
+  };
+
+  const handleTest = () => {
+    console.log(userData)
+  }
+
   return (
     <div className='flex h-screen'>
-
       {/* Main content */}
       <div className='flex-1'>
-
         {sessionCookie ? (
           userData ? (
             <div className='mb-10 text-center'>
-              <NavBar handleLogout={handleLogout} />
-              <p className='text-xl font-semibold mb-4'>Student {userData.first_name}</p>
-              <p className='text-xl font-semibold mb-4'>Contact Number {userData.contact_number}</p>
-              {/* Display uploaded image if exists */}
-              {userData.profile_image && (
-                <div className="image-container" style={{ width: "2in", height: "2in", overflow: "hidden" }}>
-                  <img src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${userData.profile_image}`} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+
+              <Navbar onProfileClick={handleProfileClick} onGradesClick={handleGradesClick} role={userData.role}/>
+              {selectedInfo === 'profile' && (
+                <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+                  {/* Display uploaded image if exists */}
+                  {userData.profile_image && (
+                    <div className="mb-4 flex justify-center">
+                      <img
+                        onClick={handleOpenPicUpdateModal}
+                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${userData.profile_image}`}
+                        alt="Profile Picture"
+                        className="object-contain cursor-pointer rounded-full shadow-lg w-32 h-32 hover:opacity-75 transition-opacity duration-300 mx-auto"
+                      />
+                    </div>
+                  )}
+                  <p className="text-2xl font-semibold mb-4">ID: {sessionCookie}</p>
+                  <p className="text-2xl font-semibold mb-4">Name: {userData.first_name} {userData.last_name}</p>
+                  <p className="text-lg text-gray-600 mb-4">Grade {userData.grade_level}</p>
+                  <p className="text-lg text-gray-600 mb-4">Contact Number: {userData.contact_number}</p>
+                  <p className="text-lg text-gray-600 mb-4">Address: {userData.address}</p>
+                  {/* Profile update button */}
+                  <button
+                    onClick={handleOpenProfileModal}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600 mb-4"
+                  >
+                    Update Profile
+                  </button>
+
+                  {/* Upload message */}
+                  {uploadMessage && <p className="text-green-500">{uploadMessage}</p>}
+
+                  {/* Profile update modal */}
+                  {isProfileModalOpen && (
+                    <UpdateProfile onClose={handleCloseProfileModal} userData={userData} />
+                  )}
+
+                  {isPicUpdateOpen && (
+                    <ProfilePicUpdateModal onClose={handleClosePicUpdateModal} userData={userData} />
+                  )}
                 </div>
               )}
-              {/* Upload message */}
-              {uploadMessage && <p className="text-green-500">{uploadMessage}</p>}
+              {selectedInfo === 'grades' && (
+                <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
+              )}
             </div>
           ) : (
             <p>Loading...</p>
           )
         ) : (
           <p className='text-red-500'>Error: Session cookie not found. Please log in.</p>
-        )}
-        
-        {/* Profile update button */}
-        <button onClick={handleOpenProfileModal} className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mt-4'>
-          Update Profile
-        </button>
-
-        {/* Profile update modal */}
-        {isProfileModalOpen && (
-              <UpdateProfile onClose={handleCloseProfileModal} userData={userData}/>
         )}
       </div>
     </div>

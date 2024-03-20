@@ -109,11 +109,11 @@ const page = () => {
 
 
   return (
-    <div className='flex justify-center items-center h-screen'>
+    <div className='flex justify-center items-center h-screen' style={{ backgroundImage: "url('./img/schoolbg.png')", backgroundSize: 'cover', backgroundPosition: 'center'}}>
   
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center h-screen w-screen bg-opacity-75 bg-black">
         {/* Form */}
-        <form onSubmit={handleLogin} className='bg-white rounded-lg shadow-md p-8 flex flex-col items-center'>
+        <form onSubmit={handleLogin} className='bg-white rounded-lg shadow-md p-8 flex flex-col items-center' style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(5px)' }}>
           <div className="mb-8">
             <img src="./img/school-logo.png" alt="school logo" className="w-40 h-50" />
           </div>
@@ -124,16 +124,16 @@ const page = () => {
               placeholder="User ID"
               value={id}
               onChange={(e) => setId(e.target.value)}
-              className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+              className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-green-500 bg-black bg-opacity-25 text-white'  
             />
           </div>
-          <div className='mb-4'>
+          <div className='mb-4 color-white'>
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500'
+              className='w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-green-500 bg-black bg-opacity-25 text-white'
             />
           </div>
           <button type="submit" className='w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'>Log In</button>

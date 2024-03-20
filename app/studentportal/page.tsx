@@ -16,13 +16,25 @@ interface UserData {
   address: string;
 }
 
+interface ParentData {
+  first_name: string;
+  last_name: string;
+  grade_level: string;
+  role: string;
+  profile_image: any;
+  contact_number: number;
+  address: string;
+}
+
 const StudentsPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [parentData, setParentData] = useState<ParentData | null>(null);
   const [sessionCookie, setSessionCookie] = useState('');
   const [selectedInfo, setSelectedInfo] = useState('profile'); // State to control which info to display
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false); // State to control modal visibility
   const [isPicUpdateOpen, setIsPicUpdateOpen] = useState<boolean>(false);
   const [uploadMessage, setUploadMessage] = useState<string>('');
+
 
   useEffect(() => {
     const getSessionCookie = () => {
@@ -57,6 +69,18 @@ const StudentsPage = () => {
       }
     };
 
+    const getParent = async () => {
+      const { data, error } = await supabase
+        .from('user_table')
+        .select('*')
+        .eq('children', cookieValue)
+        .single()
+
+      if (data) {
+        setParentData(data)
+      }
+    }
+
 
     const userTable = supabase
       .channel('custom-all-channel')
@@ -69,6 +93,7 @@ const StudentsPage = () => {
       )
       .subscribe();
 
+    getParent();
     fetchUserData();
   }, []);
 
@@ -110,10 +135,10 @@ const StudentsPage = () => {
           userData ? (
             <div className='mb-10 text-center'>
 
-              <Navbar 
-              firstButtonClick={handleProfileClick} 
-              secondButtonClick={handleGradesClick} 
-              role={userData.role} 
+              <Navbar
+                firstButtonClick={handleProfileClick}
+                secondButtonClick={handleGradesClick}
+                role={userData.role}
               />
 
               {selectedInfo === 'profile' && (
@@ -134,6 +159,7 @@ const StudentsPage = () => {
                   <p className="text-lg text-gray-600 mb-4">Grade {userData.grade_level}</p>
                   <p className="text-lg text-gray-600 mb-4">Contact Number: {userData.contact_number}</p>
                   <p className="text-lg text-gray-600 mb-4">Address: {userData.address}</p>
+                  <p className="text-lg text-gray-600 mb-4">Parent: {parentData!.first_name}</p>
                   {/* Profile update button */}
                   <button
                     onClick={handleOpenProfileModal}

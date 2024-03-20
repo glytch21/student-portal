@@ -61,6 +61,25 @@ const Navbar: React.FC<NavbarProps> = ({ firstButtonClick, secondButtonClick, th
           </li>
         </ul>
       )}
+
+      {/* nav for parents */}
+
+      {role === 'parent' && (
+        <ul style={{ display: 'flex', listStyleType: 'none', height: '100%', alignItems: 'center' }}>
+          <li style={{ marginRight: '50px', marginLeft: '10px' }}>
+            <p className='font-bold text-lg'>Parent Portal</p>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={firstButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={secondButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
+          </li>
+          <li>
+            <button onClick={handleLogout} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Logout</button>
+          </li>
+        </ul>
+      )}
     </nav>
   );
 };

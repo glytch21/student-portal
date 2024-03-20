@@ -34,6 +34,7 @@ const StudentsPage = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false); // State to control modal visibility
   const [isPicUpdateOpen, setIsPicUpdateOpen] = useState<boolean>(false);
   const [uploadMessage, setUploadMessage] = useState<string>('');
+  const [searchResult, setSearchResult] = useState([]);
 
 
   useEffect(() => {
@@ -123,8 +124,12 @@ const StudentsPage = () => {
     setIsPicUpdateOpen(false); // Close the modal
   };
 
+  const handleSearchResultUpdate = (result:any) => {
+    setSearchResult(result);
+  };
+
   const handleTest = () => {
-    console.log(userData)
+    console.log(searchResult)
   }
 
   return (
@@ -139,6 +144,7 @@ const StudentsPage = () => {
                 firstButtonClick={handleProfileClick}
                 secondButtonClick={handleGradesClick}
                 role={userData.role}
+                // searchResult={handleSearchResultUpdate}
               />
 
               {selectedInfo === 'profile' && (
@@ -159,7 +165,10 @@ const StudentsPage = () => {
                   <p className="text-lg text-gray-600 mb-4">Grade {userData.grade_level}</p>
                   <p className="text-lg text-gray-600 mb-4">Contact Number: {userData.contact_number}</p>
                   <p className="text-lg text-gray-600 mb-4">Address: {userData.address}</p>
-                  <p className="text-lg text-gray-600 mb-4">Parent: {parentData!.first_name}</p>
+                  {parentData && (
+                  <p className="text-lg text-gray-600 mb-4">Parent: {parentData.first_name}</p>
+                  )}
+                  <button onClick={handleTest}> test</button>
                   {/* Profile update button */}
                   <button
                     onClick={handleOpenProfileModal}
@@ -181,7 +190,12 @@ const StudentsPage = () => {
                   )}
                 </div>
               )}
+
               {selectedInfo === 'grades' && (
+                <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
+              )}
+
+              {selectedInfo === '' && (
                 <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
               )}
             </div>

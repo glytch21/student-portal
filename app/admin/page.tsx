@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import TeachersTable from "@/components/TeachersTable";
 import StudentsTable from '@/components/StudentsTable';
 import ParentsTable from '@/components/ParentsTable';
+import Announcement from '@/components/Announcement';
 
 interface UserData {
   first_name: string;
@@ -401,7 +402,8 @@ const AdminPage = () => {
           </div>
           <button className="border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2" onClick={handleLogout}>Logout</button>
           <button onClick={handleTest}>test</button>
-          
+
+          <Announcement />
         </>
       ) : (
         <div className="text-red-600">No session cookie found.</div>

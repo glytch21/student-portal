@@ -222,10 +222,22 @@ const AdminPage = () => {
       // Prompt for confirmation before deleting
       const confirmation = window.confirm(`Are you sure you want to delete user ${deleteUserID}?`);
       if (confirmation) {
+        // Check if the user has a profile image to delete
+        if (userToDelete.profile_image) {
+          // Remove profile image from Supabase storage
+          const { error: imageError } = await supabase.storage
+            .from('images')
+            .remove([userToDelete.profile_image]);
+          if (imageError) {
+            throw imageError;
+          }
+        }
+        // Delete the user from the user_table
         const { error } = await supabase
           .from('user_table')
           .delete()
           .eq('user_id', deleteUserID);
+        
         if (error) {
           throw error;
         }
@@ -238,6 +250,7 @@ const AdminPage = () => {
       console.error('Error deleting user:', error);
     }
   };
+  
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -248,7 +261,7 @@ const AdminPage = () => {
           ) : (
             <p>Loading...</p>
           )}
-  
+
           <form onSubmit={handleAddUser} className="mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
@@ -333,7 +346,7 @@ const AdminPage = () => {
             <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">Add User</button>
             {error && <p className="text-red-600 mt-2">{error}</p>}
           </form>
-  
+
           <div className="mb-8">
             <button onClick={() => setShowDeleteModal(true)} className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer">
               Delete User
@@ -353,7 +366,7 @@ const AdminPage = () => {
               </div>
             )}
           </div>
-  
+
           <div className="mb-8">
             <button onClick={toggleTeachersTable} className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">
               {showTeachers ? 'Hide Teachers Table' : 'Show Teachers Table'}
@@ -364,7 +377,7 @@ const AdminPage = () => {
               </div>
             )}
           </div>
-  
+
           <div className="mb-8">
             <button onClick={toggleStudentsTable} className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">
               {showStudents ? 'Hide Students Table' : 'Show Students Table'}
@@ -375,7 +388,7 @@ const AdminPage = () => {
               </div>
             )}
           </div>
-  
+
           <div className="mb-8">
             <button onClick={toggleParentsTable} className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">
               {showParents ? 'Hide Parents Table' : 'Show Parents Table'}
@@ -388,19 +401,7 @@ const AdminPage = () => {
           </div>
           <button className="border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2" onClick={handleLogout}>Logout</button>
           <button onClick={handleTest}>test</button>
-          <div className="mb-4">
-              <label htmlFor="role" className="block mb-1">Subjects:</label>
-              <select
-                id="subject"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
-              >
-                <option value="student">UCSP</option>
-                <option value="teacher">Practical Research I</option>
-                <option value="parent">BASIC CALCULUS</option>
-              </select>
-            </div>
+          
         </>
       ) : (
         <div className="text-red-600">No session cookie found.</div>
@@ -409,7 +410,7 @@ const AdminPage = () => {
 
     </div>
   );
-  
+
 
 };
 

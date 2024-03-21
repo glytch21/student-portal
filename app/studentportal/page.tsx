@@ -124,7 +124,7 @@ const StudentsPage = () => {
     setIsPicUpdateOpen(false); // Close the modal
   };
 
-  const handleSearchResultUpdate = (result:any) => {
+  const handleSearchResultUpdate = (result: any) => {
     setSearchResult(result);
   };
 
@@ -144,7 +144,7 @@ const StudentsPage = () => {
                 firstButtonClick={handleProfileClick}
                 secondButtonClick={handleGradesClick}
                 role={userData.role}
-                // searchResult={handleSearchResultUpdate}
+              // searchResult={handleSearchResultUpdate}
               />
 
               {selectedInfo === 'profile' && (
@@ -163,12 +163,12 @@ const StudentsPage = () => {
                   <p className="text-2xl font-semibold mb-4">ID: {sessionCookie}</p>
                   <p className="text-2xl font-semibold mb-4">Name: {userData.first_name} {userData.last_name}</p>
                   {userData.role === 'student' && (
-                  <p className="text-lg text-gray-600 mb-4">Grade {userData.grade_level}</p>
+                    <p className="text-lg text-gray-600 mb-4">Grade {userData.grade_level}</p>
                   )}
                   <p className="text-lg text-gray-600 mb-4">Contact Number: {userData.contact_number}</p>
                   <p className="text-lg text-gray-600 mb-4">Address: {userData.address}</p>
                   {parentData && (
-                  <p className="text-lg text-gray-600 mb-4">Parent: {parentData.first_name}</p>
+                    <p className="text-lg text-gray-600 mb-4">Parent: {parentData.first_name}</p>
                   )}
                   <button onClick={handleTest}> test</button>
                   {/* Profile update button */}
@@ -193,8 +193,11 @@ const StudentsPage = () => {
                 </div>
               )}
 
+              {/* test */}
               {selectedInfo === 'grades' && (
-                <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
+                <div>
+                  <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
+                </div>
               )}
 
               {selectedInfo === '' && (

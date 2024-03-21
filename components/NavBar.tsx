@@ -10,7 +10,7 @@ interface NavbarProps {
   secondButtonClick: () => void;
   thirdButtonClick?: () => void;
   fourthButtonClick?: () => void;
-
+ 
   role: string;
 }
 

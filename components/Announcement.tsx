@@ -76,7 +76,7 @@ const Announcement = () => {
                 Announcement
             </div>
             { announcement.slice().reverse().map((data:any) => (
-                <div className="flex flex-col gap-4 mt-10 p-10 shadow-lg border border-gray-200 rounded-lg">
+                <div className="flex flex-col gap-4 bg-white mt-10 p-10 shadow-lg border border-gray-200 rounded-lg">
                     <div className="font-semibold text-lg text-left">
                         {data.headline}
                     </div>

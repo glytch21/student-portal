@@ -201,7 +201,7 @@ const StudentsPage = () => {
   }
 
   return (
-    <div className='flex h-screen'>
+    <div className='flex h-screen bg-gray-100'>
       {/* Main content */}
       <div className='flex-1'>
         {sessionCookie ? (
@@ -217,50 +217,60 @@ const StudentsPage = () => {
               />
 
               {selectedInfo === 'profile' && (
-                <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
-                  {/* Display uploaded image if exists */}
-                  {userData.profile_image && (
-                    <div className="mb-4 flex justify-center">
-                      <img
-                        onClick={handleOpenPicUpdateModal}
-                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${userData.profile_image}`}
-                        alt="Profile Picture"
-                        className="object-contain cursor-pointer rounded-full shadow-lg w-32 h-32 hover:opacity-75 transition-opacity duration-300 mx-auto"
-                      />
+              <div className="flex p-6 pt-8">
+                {/* Profile Container */}
+                <div className="w-1/3 h-[1%] p-6 pb-[5rem] bg-white rounded-lg shadow-lg relative">
+                  {/* Image and ID */}
+                  <div className="flex items-center mb-4">
+                    <img
+                      onClick={handleOpenPicUpdateModal}
+                      src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${userData.profile_image}`}
+                      alt="Profile Picture"
+                      className="object-contain cursor-pointer rounded-full shadow-lg w-32 h-32 hover:opacity-75 transition-opacity duration-300 mr-4"
+                    />
+                    <div>
+                      <p className="text-2xl font-semibold mb-1">ID: {sessionCookie}</p>
+                      {/* Add any other ID-related info here */}
                     </div>
-                  )}
-                  <p className="text-2xl font-semibold mb-4">ID: {sessionCookie}</p>
-                  <p className="text-2xl font-semibold mb-4">Name: {userData.first_name} {userData.last_name}</p>
-                  {userData.role === 'student' && (
-                    <p className="text-lg text-gray-600 mb-4">Grade {userData.grade_level}</p>
-                  )}
-                  <p className="text-lg text-gray-600 mb-4">Contact Number: {userData.contact_number}</p>
-                  <p className="text-lg text-gray-600 mb-4">Address: {userData.address}</p>
-                  {parentData && (
-                    <p className="text-lg text-gray-600 mb-4">Parent: {parentData.first_name}</p>
-                  )}
-
-                  {/* Profile update button */}
+                  </div>
+                  {/* Name */}
+                  <div className="mb-4">
+                    <p className="text-left text-2xl font-semibold">Name: {userData.first_name} {userData.last_name}</p>
+                  </div>
+                  {/* Address */}
+                  <div className="mb-4">
+                    <p className="text-left text-lg text-gray-600">Address: {userData.address}</p>
+                  </div>
+                  {/* Contact */}
+                  <div className="mb-4">
+                    <p className="text-left text-lg text-gray-600">Contact Number: {userData.contact_number}</p>
+                  </div>
+                  {/* Update Profile Button */}
                   <button
                     onClick={handleOpenProfileModal}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600 mb-4"
+                    className="absolute bottom-6 left-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600"
                   >
                     Update Profile
                   </button>
-
-                  {/* Upload message */}
-                  {uploadMessage && <p className="text-green-500">{uploadMessage}</p>}
-
-                  {/* Profile update modal */}
-                  {isProfileModalOpen && (
-                    <UpdateProfile onClose={handleCloseProfileModal} userData={userData} />
-                  )}
-
-                  {isPicUpdateOpen && (
-                    <ProfilePicUpdateModal onClose={handleClosePicUpdateModal} userData={userData} />
-                  )}
                 </div>
-              )}
+                {/* Add your schedule component or content here with appropriate width */}
+                <div className="w-2/3 p-6 h-[87.5vh] bg-white rounded-lg shadow-lg ml-6">
+                  {/* Schedule Component */}
+                  {/* Add your schedule content here */}
+                  Schedule
+                </div>
+                {/* Upload message */}
+                {uploadMessage && <p className="text-green-500">{uploadMessage}</p>}
+  
+                {/* Profile update modal */}
+                {isProfileModalOpen && (
+                  <UpdateProfile onClose={handleCloseProfileModal} userData={userData} />
+                )}
+  
+                {isPicUpdateOpen && (
+                  <ProfilePicUpdateModal onClose={handleClosePicUpdateModal} userData={userData} />
+                )}
+              </div>)}
 
               {/* test */}
               {selectedInfo === 'grades' && (

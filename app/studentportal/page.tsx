@@ -36,7 +36,7 @@ const StudentsPage = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false); // State to control modal visibility
   const [isPicUpdateOpen, setIsPicUpdateOpen] = useState<boolean>(false);
   const [uploadMessage, setUploadMessage] = useState<string>('');
-
+  const [myGrades, setmyGrades] = useState<any>([]);
 
 
   useEffect(() => {
@@ -65,6 +65,8 @@ const StudentsPage = () => {
           }
           if (data) {
             setUserData(data);
+            console.log('hey', data.grades)
+            setmyGrades(data.grades)
           }
 
           if (data.role === 'student') {
@@ -90,6 +92,7 @@ const StudentsPage = () => {
     }
 
 
+
     const userTable = supabase
       .channel('custom-all-channel')
       .on(
@@ -100,7 +103,6 @@ const StudentsPage = () => {
         }
       )
       .subscribe();
-
 
     fetchUserData();
   }, []);
@@ -141,24 +143,25 @@ const StudentsPage = () => {
 
 
   const [initialGrades, setInitialGrades] = useState<any>([]);
-  const [subjectToUpdate, setSubjectToUpdate] = useState<string>('')
+  const [subjectToUpdate, setSubjectToUpdate] = useState<any>('')
   const [newGrade, setNewGrade] = useState<string>('')
-  const [studentToGrade, setStudentToGrade] = useState<any>(' ')
+  const [studentToGrade, setStudentToGrade] = useState<any>('')
 
   const handleTest = async () => {
     const { data, error } = await supabase
       .from("user_table")
-      .select("grades")
-      .eq("user_id", studentToGrade);
+      .select("*")
+      .eq("user_id", studentToGrade)
 
-    console.log(data)
+
     if (data) {
       setInitialGrades(data![0].grades)
+      console.log(data![0].grades)
     }
 
   }
 
-  const handleTest2 = async (subjectToUpdate: string, newGrade: string) => {
+  const handleTest2 = async (subjectToUpdate: any, newGrade: string, studentToGrade: any) => {
     // Find the index of the subject to update in the initialGrades array
     const index = initialGrades.findIndex((item: { subject: string; grade: string; }) => item.subject === subjectToUpdate);
 
@@ -174,7 +177,7 @@ const StudentsPage = () => {
         const { data, error } = await supabase
           .from("user_table")
           .update({ grades: initialGrades })
-          .eq("user_id", sessionCookie)
+          .eq("user_id", studentToGrade)
           .select("grades");
 
         if (error) {
@@ -191,7 +194,7 @@ const StudentsPage = () => {
   }
 
   const handleTest3 = () => {
-    handleTest2('Science', '90')
+    handleTest2(subjectToUpdate, newGrade, studentToGrade)
   }
 
   const updatestudent = (e: any) => {
@@ -274,31 +277,50 @@ const StudentsPage = () => {
 
               {/* test */}
               {selectedInfo === 'grades' && (
-                <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  {myGrades.map((user: any) => (
+                    <div key={user.subject} className="bg-gray-100 p-4 rounded-lg shadow-md">
+                      <h2 className="text-lg font-semibold mb-2">{user.subject}</h2>
+                      <p className="text-gray-600">Grade: {user.grade}</p>
+                    </div>
+                  ))}
+                </div>
+
               )}
 
               {selectedInfo === 'class' && (
-                <div>
+                <div className="flex flex-col gap-4">
                   <input
                     type="text"
                     id="studentToGrade"
                     value={studentToGrade}
                     onChange={updatestudent}
                     placeholder="Enter Student ID"
-                    className={`w-full border border-gray-300  rounded-lg p-2`}
+                    className="w-48 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
                   />
                   <select
                     id="subjectToUpdate"
                     value={subjectToUpdate}
                     onChange={(e) => setSubjectToUpdate(e.target.value)}
-                    className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
+                    className="w-48 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
                   >
+                    <option value="">Select Subject</option>
                     {initialGrades.map((user: any) => (
-                      <option key={user.subject} className='text-xl font-semibold mb-4'>{user.subject}</option>
+                      <option key={user.subject} value={user.subject}>{user.subject}</option>
                     ))}
                   </select>
-                  <button onClick={handleTest}> fetch</button>
-                  <button onClick={handleTest3}> update</button>
+                  <input
+                    type="text"
+                    id="newGrade"
+                    value={newGrade}
+                    onChange={(e) => setNewGrade(e.target.value)}
+                    placeholder="Enter New Grade"
+                    className="w-48 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
+                  />
+                  <div className="flex">
+                    <button onClick={handleTest} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Fetch</button>
+                    <button onClick={handleTest3} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Update</button>
+                  </div>
                 </div>
               )}
 

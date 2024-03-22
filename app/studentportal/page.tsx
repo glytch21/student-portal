@@ -5,6 +5,7 @@ import supabase from '@/config/client';
 import Navbar from '@/components/NavBar';
 import UpdateProfile from '@/components/UpdateProfile'
 import ProfilePicUpdateModal from '@/components/UpdateProfilePic';
+import Announcement from '@/components/Announcement';
 
 interface UserData {
   first_name: string;
@@ -293,7 +294,7 @@ const StudentsPage = () => {
 
               {selectedInfo === 'announcement' && (
                 <div>
-                  announcement
+                  <Announcement />
                 </div>
               )}
             </div>

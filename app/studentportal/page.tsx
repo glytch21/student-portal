@@ -14,6 +14,7 @@ interface UserData {
   profile_image: any;
   contact_number: number;
   address: string;
+  grades: any;
 }
 
 interface ParentData {
@@ -34,7 +35,7 @@ const StudentsPage = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false); // State to control modal visibility
   const [isPicUpdateOpen, setIsPicUpdateOpen] = useState<boolean>(false);
   const [uploadMessage, setUploadMessage] = useState<string>('');
-  const [searchResult, setSearchResult] = useState([]);
+
 
 
   useEffect(() => {
@@ -64,6 +65,11 @@ const StudentsPage = () => {
           if (data) {
             setUserData(data);
           }
+
+          if (data.role === 'student') {
+            getParent();
+          }
+
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -94,7 +100,7 @@ const StudentsPage = () => {
       )
       .subscribe();
 
-    getParent();
+
     fetchUserData();
   }, []);
 
@@ -106,6 +112,14 @@ const StudentsPage = () => {
 
   const handleGradesClick = () => {
     setSelectedInfo('grades');
+  };
+
+  const handleClassClick = () => {
+    setSelectedInfo('class');
+  };
+
+  const handleAnnouncementClick = () => {
+    setSelectedInfo('announcement');
   };
 
   const handleOpenProfileModal = () => {
@@ -124,12 +138,65 @@ const StudentsPage = () => {
     setIsPicUpdateOpen(false); // Close the modal
   };
 
-  const handleSearchResultUpdate = (result: any) => {
-    setSearchResult(result);
-  };
 
-  const handleTest = () => {
-    console.log(searchResult)
+  const [initialGrades, setInitialGrades] = useState<any>([]);
+  const [subjectToUpdate, setSubjectToUpdate] = useState<string>('')
+  const [newGrade, setNewGrade] = useState<string>('')
+  const [studentToGrade, setStudentToGrade] = useState<any>(' ')
+
+  const handleTest = async () => {
+    const { data, error } = await supabase
+      .from("user_table")
+      .select("grades")
+      .eq("user_id", studentToGrade);
+
+    console.log(data)
+    if (data) {
+      setInitialGrades(data![0].grades)
+    }
+
+  }
+
+  const handleTest2 = async (subjectToUpdate: string, newGrade: string) => {
+    // Find the index of the subject to update in the initialGrades array
+    const index = initialGrades.findIndex((item: { subject: string; grade: string; }) => item.subject === subjectToUpdate);
+
+    if (index !== -1) {
+      // Update the grade locally
+      initialGrades[index].grade = newGrade;
+      console.log(`Grade of ${subjectToUpdate} updated to ${newGrade}`);
+
+      try {
+
+
+        // Update the 'grades' column in the 'user_table' using Supabase
+        const { data, error } = await supabase
+          .from("user_table")
+          .update({ grades: initialGrades })
+          .eq("user_id", sessionCookie)
+          .select("grades");
+
+        if (error) {
+          throw error;
+        }
+
+        console.log('Grades updated in Supabase:', data);
+      } catch (error) {
+        console.error('Error updating grades in Supabase:', error);
+      }
+    } else {
+      console.log(`Subject ${subjectToUpdate} not found`);
+    }
+  }
+
+  const handleTest3 = () => {
+    handleTest2('Science', '90')
+  }
+
+  const updatestudent = (e: any) => {
+    const value = e.target.value
+
+    setStudentToGrade(value)
   }
 
   return (
@@ -141,10 +208,11 @@ const StudentsPage = () => {
             <div className='mb-10 text-center'>
 
               <Navbar
-                firstButtonClick={handleProfileClick}
-                secondButtonClick={handleGradesClick}
+                profileButtonClick={handleProfileClick}
+                gradesButtonClick={handleGradesClick}
+                classButtonClick={handleClassClick}
+                announcementButtonClick={handleAnnouncementClick}
                 role={userData.role}
-              // searchResult={handleSearchResultUpdate}
               />
 
               {selectedInfo === 'profile' && (
@@ -170,7 +238,7 @@ const StudentsPage = () => {
                   {parentData && (
                     <p className="text-lg text-gray-600 mb-4">Parent: {parentData.first_name}</p>
                   )}
-                  <button onClick={handleTest}> test</button>
+
                   {/* Profile update button */}
                   <button
                     onClick={handleOpenProfileModal}
@@ -195,13 +263,38 @@ const StudentsPage = () => {
 
               {/* test */}
               {selectedInfo === 'grades' && (
+                <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
+              )}
+
+              {selectedInfo === 'class' && (
                 <div>
-                  <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
+                  <input
+                    type="text"
+                    id="studentToGrade"
+                    value={studentToGrade}
+                    onChange={updatestudent}
+                    placeholder="Enter Student ID"
+                    className={`w-full border border-gray-300  rounded-lg p-2`}
+                  />
+                  <select
+                    id="subjectToUpdate"
+                    value={subjectToUpdate}
+                    onChange={(e) => setSubjectToUpdate(e.target.value)}
+                    className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
+                  >
+                    {initialGrades.map((user: any) => (
+                      <option key={user.subject} className='text-xl font-semibold mb-4'>{user.subject}</option>
+                    ))}
+                  </select>
+                  <button onClick={handleTest}> fetch</button>
+                  <button onClick={handleTest3}> update</button>
                 </div>
               )}
 
-              {selectedInfo === '' && (
-                <p className='text-xl font-semibold mb-4'>grades {userData.contact_number}</p>
+              {selectedInfo === 'announcement' && (
+                <div>
+                  announcement
+                </div>
               )}
             </div>
           ) : (

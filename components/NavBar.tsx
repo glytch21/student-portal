@@ -6,15 +6,16 @@ import { useState, useEffect } from 'react';
 import ProfileInfo from '@/components/ProfileInfo'
 
 interface NavbarProps {
-  firstButtonClick: () => void;
-  secondButtonClick: () => void;
-  thirdButtonClick?: () => void;
-  fourthButtonClick?: () => void;
+  profileButtonClick: () => void;
+  gradesButtonClick?: () => void;
+  classButtonClick?: () => void;
+  announcementButtonClick?: () => void;
+
  
   role: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ firstButtonClick, secondButtonClick, thirdButtonClick, fourthButtonClick, role }) => {
+const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, classButtonClick, announcementButtonClick, role }) => {
 
   const [searchValue, setSearchValue] = useState('');
   const [resultUsers, setResultUsers] = useState<any>([])
@@ -87,13 +88,13 @@ const Navbar: React.FC<NavbarProps> = ({ firstButtonClick, secondButtonClick, th
             <p className='font-bold text-lg'>Student Portal</p>
           </li>
           <li style={{ marginRight: '10px' }}>
-            <button onClick={firstButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
+            <button onClick={profileButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
           </li>
           <li style={{ marginRight: '10px' }}>
-            <button onClick={secondButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Grades</button>
+            <button onClick={gradesButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Grades</button>
           </li>
           <li style={{ marginRight: '10px' }}>
-            <button onClick={thirdButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
+            <button onClick={announcementButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
           </li>
           <li className="relative">
             <input
@@ -173,14 +174,14 @@ const Navbar: React.FC<NavbarProps> = ({ firstButtonClick, secondButtonClick, th
             <p className='font-bold text-lg'>Teachers Portal</p>
           </li>
           <li style={{ marginRight: '10px' }}>
-            <button onClick={firstButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
+            <button onClick={profileButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
           </li>
           <li style={{ marginRight: '10px' }}>
-            <button onClick={secondButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Grades</button>
+            <button onClick={classButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Class</button>
           </li>
-          <li style={{ marginRight: '10px' }}>
+          {/* <li style={{ marginRight: '10px' }}>
             <button onClick={thirdButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
-          </li>
+          </li> */}
           <li className="relative">
             <input
               type="text"
@@ -253,7 +254,7 @@ const Navbar: React.FC<NavbarProps> = ({ firstButtonClick, secondButtonClick, th
 
       {/* nav for parents */}
 
-      {role === 'parent' && (
+      {/* {role === 'parent' && (
         <ul style={{ display: 'flex', listStyleType: 'none', height: '100%', alignItems: 'center' }}>
           <li style={{ marginRight: '50px', marginLeft: '10px' }}>
             <p className='font-bold text-lg'>Parent Portal</p>
@@ -268,7 +269,7 @@ const Navbar: React.FC<NavbarProps> = ({ firstButtonClick, secondButtonClick, th
             <button onClick={handleLogout} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Logout</button>
           </li>
         </ul>
-      )}
+      )} */}
     </nav>
 
   );

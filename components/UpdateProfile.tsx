@@ -109,7 +109,7 @@ const ProfileUpdateModal: React.FC<Props> = ({ onClose, userData }) => {
       if (contactNumber) {
         const { error: contactUpdateError } = await supabase
           .from('user_table')
-          .update({ contact_number: contactNumber }) // Update the contact_number field with the new value
+          .update({ contact_number: String(contactNumber) }) // Update the contact_number field with the new value
           .eq('user_id', userData.user_id);
 
         if (contactUpdateError) {

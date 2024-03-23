@@ -11,11 +11,19 @@ interface NavbarProps {
   classButtonClick?: () => void;
   announcementButtonClick?: () => void;
 
-
+}
+interface UserData {
+  first_name: string;
+  last_name: string;
+  grade_level: string;
   role: string;
+  profile_image: any;
+  contact_number: number;
+  address: string;
+  grades: any;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, classButtonClick, announcementButtonClick, role }) => {
+const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, classButtonClick, announcementButtonClick }) => {
 
   const [searchValue, setSearchValue] = useState('');
   const [resultUsers, setResultUsers] = useState<any>([])
@@ -23,6 +31,43 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
   const [isSearching, setIsSearching] = useState(false);
   const [profileInfo, setProfileInfo] = useState(null);
   const [profileInfoModal, setProfileInfoModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const getSessionCookie = () => {
+      const cookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('session='))
+        ?.split('=')[1];
+      return cookie || '';
+    };
+
+    const cookieValue = getSessionCookie();
+
+    const fetchUserData = async () => {
+      if (cookieValue) {
+        try {
+          const { data, error } = await supabase
+            .from('user_table')
+            .select('*')
+            .eq('user_id', cookieValue)
+            .single();
+
+          setCurrentUser(data)
+
+          if (error) {
+            throw error;
+          }
+
+
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleSearch = async () => {
 
@@ -82,7 +127,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
 
       {/* nav for students */}
 
-      {role === 'student' && (
+      {currentUser && currentUser.role === 'student' && (
         <ul style={{ display: 'flex', listStyleType: 'none', height: '100%', alignItems: 'center' }}>
           <li style={{ marginRight: '50px', marginLeft: '10px' }}>
             <p className='font-bold text-lg'>Student Portal</p>
@@ -166,7 +211,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
 
       {/* nav for teachers */}
 
-      {role === 'teacher' && (
+      {currentUser && currentUser.role === 'teacher' && (
         <ul style={{ display: 'flex', listStyleType: 'none', height: '100%', alignItems: 'center' }}>
           <li style={{ marginRight: '50px', marginLeft: '10px' }}>
             <p className='font-bold text-lg'>Teachers Portal</p>
@@ -177,9 +222,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
           <li style={{ marginRight: '10px' }}>
             <button onClick={classButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Class</button>
           </li>
-          {/* <li style={{ marginRight: '10px' }}>
-            <button onClick={thirdButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
-          </li> */}
+
           <li className="relative">
             <input
               type="text"
@@ -250,22 +293,25 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
 
       {/* nav for parents */}
 
-      {/* {role === 'parent' && (
+      {currentUser && currentUser.role === 'parent' && (
         <ul style={{ display: 'flex', listStyleType: 'none', height: '100%', alignItems: 'center' }}>
           <li style={{ marginRight: '50px', marginLeft: '10px' }}>
             <p className='font-bold text-lg'>Parent Portal</p>
           </li>
           <li style={{ marginRight: '10px' }}>
-            <button onClick={firstButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
+            <button onClick={profileButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
           </li>
           <li style={{ marginRight: '10px' }}>
-            <button onClick={secondButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
+            <button onClick={gradesButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Report Card</button>
           </li>
+
+
+
           <li>
             <button onClick={handleLogout} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Logout</button>
           </li>
         </ul>
-      )} */}
+      )}
     </nav>
 
 

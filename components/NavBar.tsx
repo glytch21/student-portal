@@ -188,9 +188,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
               onChange={handleSearchValue}
               placeholder="Search User..."
               onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch();
-                }
+                handleSearch();
               }}
               onBlur={handleInputBlur}
               className="w-full border border-gray-300 rounded-lg p-2 text-black"

@@ -37,9 +37,8 @@ const UpdateGrades: React.FC<Props> = ({ onClose, userData }) => {
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg flex">
         <div className="mr-8">
-          <h2 className="text-2xl font-semibold mb-4">Update Grades</h2>
+          <h2 className="text-2xl font-semibold mb-4">{userData.first_name} {userData.last_name}'s Grades</h2>
           <table className="w-full mb-4">
-            <caption className="text-lg font-semibold mb-2">Student List</caption>
             <thead>
               <tr>
                 <th className="border p-2">Subject</th>
@@ -66,6 +65,7 @@ const UpdateGrades: React.FC<Props> = ({ onClose, userData }) => {
             </tbody>
           </table>
           <div className="mb-4">
+          <h1 className="text-1xl font-semibold mb-1">Comments</h1>
             <textarea
               placeholder="Comments..."
               value={comments}

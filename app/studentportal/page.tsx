@@ -341,7 +341,7 @@ const StudentsPage = () => {
                       {myGrades.map((user: any) => (
                         <div key={user.subject} className="bg-gray-100 p-4 rounded-lg shadow-md">
                           <h2 className="text-lg font-semibold mb-2">{user.subject}</h2>
-                          <p className="text-gray-600">Grade: {user.grade}</p>
+                          <p className="text-gray-600">G<b>{user.grade}</b></p>
                         </div>
                       ))}
                     </div>
@@ -358,7 +358,7 @@ const StudentsPage = () => {
                       {childData.grades.map((user: any) => (
                         <div key={user.subject} className="bg-gray-100 p-4 rounded-lg shadow-md">
                           <h2 className="text-lg font-semibold mb-2">{user.subject}</h2>
-                          <p className="text-gray-600">Grade: {user.grade}</p>
+                          <p className="text-gray-600">Grade: <b>{user.grade}</b></p>
                         </div>
                       ))}
                     </div>

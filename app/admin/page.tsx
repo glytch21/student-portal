@@ -63,13 +63,8 @@ const AdminPage = () => {
         .update({ grades: updatedGrades })
         .eq('user_id', addSubjectStudent);
 
-      if (updatedData) {
-        // Handle success
         alert('Subject added successfully');
-      } else {
-        // Handle error
-        alert('Failed to update user_table: ');
-      }
+
     } else {
       // Handle case where initial data is empty or undefined
       alert('Initial data not found or empty: ' + error.message);

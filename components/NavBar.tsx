@@ -78,111 +78,196 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
   };
 
   return (
-    <nav className="flex justify-between items-center h-60px p-3 bg-gray-800 text-white px-4">
+    <nav style={{ height: '60px', backgroundColor: '#333', color: '#fff' }}>
 
-      {/* Left Side - Navigation Links */}
-      <ul className="flex list-none space-x-4">
-        {role === 'student' && (
-          <>
-            <li>
-              <p className="font-bold text-lg">Student Portal</p>
-            </li>
-            <li>
-              <button onClick={profileButtonClick} className="nav-button">Profile</button>
-            </li>
-            <li>
-              <button onClick={gradesButtonClick} className="nav-button">Grades</button>
-            </li>
-            <li>
-              <button onClick={announcementButtonClick} className="nav-button">Announcements</button>
-            </li>
-          </>
-        )}
+      {/* nav for students */}
 
-        {role === 'teacher' && (
-          <>
-            <li>
-              <p className="font-bold text-lg">Teachers Portal</p>
-            </li>
-            <li>
-              <button onClick={profileButtonClick} className="nav-button">Profile</button>
-            </li>
-            <li>
-              <button onClick={classButtonClick} className="nav-button">Class</button>
-            </li>
-            {/* Add more teacher-specific navigation items here */}
-          </>
-        )}
-
-        {/* Uncomment and modify as needed for parent navigation */}
-        {/* {role === 'parent' && (
-      <>
-        <li>
-          <p className="font-bold text-lg">Parent Portal</p>
-        </li>
-        <li>
-          <button onClick={firstButtonClick} className="nav-button">Profile</button>
-        </li>
-        <li>
-          <button onClick={secondButtonClick} className="nav-button">Announcements</button>
-        </li>
-        {/* Add more parent-specific navigation items here *\/}
-      </>
-    )} */}
-      </ul>
-
-      {/* Right Side - Search Bar and Logout Button */}
-      <div className="flex items-center space-x-4">
-        {/* Search Bar */}
-        <div className="relative">
-          <input
-            type="text"
-            id="searchValue"
-            value={searchValue}
-            onChange={handleSearchValue}
-            placeholder="Search User..."
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleSearch();
-              }
-            }}
-            onBlur={handleInputBlur}
-            className="border border-gray-300 rounded-lg p-2 text-black"
-          />
-          {isSearching && (
-            <div className="absolute top-full left-0 w-full bg-white text-black p-2 rounded-md mt-1 z-10 border border-black border-b">
-              {/* Display search results */}
+      {role === 'student' && (
+        <ul style={{ display: 'flex', listStyleType: 'none', height: '100%', alignItems: 'center' }}>
+          <li style={{ marginRight: '50px', marginLeft: '10px' }}>
+            <p className='font-bold text-lg'>Student Portal</p>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={profileButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={gradesButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Grades</button>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={announcementButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
+          </li>
+          <li className="relative">
+            <input
+              type="text"
+              id="searchValue"
+              value={searchValue}
+              onChange={handleSearchValue}
+              placeholder="Search User..."
+              onKeyPress={(e) => {
+                handleSearch()
+              }}
+              onBlur={handleInputBlur}
+              className="w-full border border-gray-300 rounded-lg p-2 text-black"
+            />
+            {isSearching && (
+              <div className="absolute top-full left-0 w-full bg-white text-black p-2 rounded-md mt-1 z-10 border border-black border-b">
                 <div>
                   {resultUsers.map((user: any) => (
                     <div
                       key={user.id}
-                      className="flex items-center space-x-2 cursor-pointer"
+                      className="bg-white text-black p-2 rounded-md border border-black cursor-pointer flex items-center"
                       onClick={() => handleOpenModal(user)}
                     >
                       <img
                         src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${user.profile_image}`}
                         alt="Profile Picture"
-                        className="w-8 h-8 rounded-full"
+                        className="object-contain rounded-full shadow-lg w-10 h-10 mr-4"
+                        style={{ fontSize: '1.5em' }}
                       />
-                      <span>{user.first_name} {user.last_name}</span>
+                      <div>
+                        <div className="mb-1" style={{ fontSize: '13px' }}>{user.first_name} {user.last_name}</div>
+                      </div>
                     </div>
                   ))}
+
+                  {lastnameResults.map((user: any) => (
+                    <div
+                      key={user.id}
+                      className="bg-white text-black p-2 rounded-md border border-black cursor-pointer flex items-center"
+                      onClick={() => handleOpenModal(user)}
+                    >
+                      <img
+                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${user.profile_image}`}
+                        alt="Profile Picture"
+                        className="object-contain rounded-full shadow-lg w-10 h-10 mr-4"
+                        style={{ fontSize: '1.5em' }}
+                      />
+                      <div>
+                        <div className="mb-1" style={{ fontSize: '13px' }}>{user.first_name} {user.last_name}</div>
+                      </div>
+                    </div>
+                  ))}
+
                 </div>
-       
-              {/* Display message if no search results */}
-              {/* {resultUsers.length === 0 && <div>No results found.</div>} */}
+              </div>
+            )}
+          </li>
 
-              {profileInfoModal && (
-                <ProfileInfo user={profileInfo} onClose={handleCloseModal} />
-              )}
-            </div>
+          {profileInfoModal && (
+            <ProfileInfo user={profileInfo} onClose={handleCloseModal} />
           )}
-        </div>
 
-        {/* Logout Button */}
-        <button onClick={handleLogout} className="nav-button p-2 bg-red-500 rounded-lg hover:bg-red-600">Logout</button>
-      </div>
+          <li>
+            <button onClick={handleLogout} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Logout</button>
+          </li>
 
+        </ul>
+      )}
+
+      {/* nav for teachers */}
+
+      {role === 'teacher' && (
+        <ul style={{ display: 'flex', listStyleType: 'none', height: '100%', alignItems: 'center' }}>
+          <li style={{ marginRight: '50px', marginLeft: '10px' }}>
+            <p className='font-bold text-lg'>Teachers Portal</p>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={profileButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={classButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Class</button>
+          </li>
+          {/* <li style={{ marginRight: '10px' }}>
+            <button onClick={thirdButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
+          </li> */}
+          <li className="relative">
+            <input
+              type="text"
+              id="searchValue"
+              value={searchValue}
+              onChange={handleSearchValue}
+              placeholder="Search User..."
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
+              onBlur={handleInputBlur}
+              className="w-full border border-gray-300 rounded-lg p-2 text-black"
+            />
+            {isSearching && (
+              <div className="absolute top-full left-0 w-full bg-white text-black p-2 rounded-md mt-1 z-10 border border-black border-b">
+                <div>
+                  {resultUsers.map((user: any) => (
+                    <div
+                      key={user.id}
+                      className="bg-white text-black p-2 rounded-md border border-black cursor-pointer flex items-center"
+                      onClick={() => handleOpenModal(user)}
+                    >
+                      <img
+                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${user.profile_image}`}
+                        alt="Profile Picture"
+                        className="object-contain rounded-full shadow-lg w-10 h-10 mr-4"
+                        style={{ fontSize: '1.5em' }}
+                      />
+                      <div>
+                        <div className="mb-1" style={{ fontSize: '13px' }}>{user.first_name} {user.last_name}</div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {lastnameResults.map((user: any) => (
+                    <div
+                      key={user.id}
+                      className="bg-white text-black p-2 rounded-md border border-black cursor-pointer flex items-center"
+                      onClick={() => handleOpenModal(user)}
+                    >
+                      <img
+                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${user.profile_image}`}
+                        alt="Profile Picture"
+                        className="object-contain rounded-full shadow-lg w-10 h-10 mr-4"
+                        style={{ fontSize: '1.5em' }}
+                      />
+                      <div>
+                        <div className="mb-1" style={{ fontSize: '13px' }}>{user.first_name} {user.last_name}</div>
+                      </div>
+                    </div>
+                  ))}
+
+                </div>
+              </div>
+            )}
+          </li>
+
+          {profileInfoModal && (
+            <ProfileInfo user={profileInfo} onClose={handleCloseModal} />
+          )}
+
+          <li>
+            <button onClick={handleLogout} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Logout</button>
+          </li>
+
+        </ul>
+      )}
+
+      {/* nav for parents */}
+
+      {/* {role === 'parent' && (
+        <ul style={{ display: 'flex', listStyleType: 'none', height: '100%', alignItems: 'center' }}>
+          <li style={{ marginRight: '50px', marginLeft: '10px' }}>
+            <p className='font-bold text-lg'>Parent Portal</p>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={firstButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Profile</button>
+          </li>
+          <li style={{ marginRight: '10px' }}>
+            <button onClick={secondButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
+          </li>
+          <li>
+            <button onClick={handleLogout} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Logout</button>
+          </li>
+        </ul>
+      )} */}
     </nav>
 
 

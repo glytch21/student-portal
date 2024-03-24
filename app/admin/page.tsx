@@ -32,46 +32,11 @@ const AdminPage = () => {
   const [sessionCookie, setSessionCookie] = useState("");
   const [deleteUserID, setDeleteUserID] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [addSubjectStudent, setAddSubjectStudent] = useState('')
-  const [subjectToAdd, setSubjectToAdd] = useState('')
 
   const [headline, setHeadline] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [receiver, setReceiver] = useState<string>("Student");
   const [formError, setFormError] = useState<any>(null);
-
-  const handleAddSubject = async () => {
-    const { data: initial, error } = await supabase
-      .from('user_table')
-      .select('grades')
-      .eq('user_id', addSubjectStudent);
-
-    if (initial) {
-      console.log('initial', initial);
-      // Assuming grades is an array within each user's data
-      let updatedGrades = [...initial[0].grades]; // Create a copy of the grades array
-
-      // Push the new subject to the copied grades array
-      updatedGrades.push({
-        subject: subjectToAdd,
-        grade: 'Not Yet Available'
-      });
-
-      // Update the user_table with the new grades data
-      const { data: updatedData, error: updateError } = await supabase
-        .from('user_table')
-        .update({ grades: updatedGrades })
-        .eq('user_id', addSubjectStudent);
-
-        alert('Subject added successfully');
-
-    } else {
-      // Handle case where initial data is empty or undefined
-      alert('Initial data not found or empty: ' + error.message);
-    }
-  };
-
-
 
   useEffect(() => {
     // Function to retrieve the value of the session cookie
@@ -113,34 +78,31 @@ const AdminPage = () => {
   }, []);
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!headline || !content || !receiver) {
-      setFormError('Please fill in all the fields correctly.')
-      return
     if (!headline || !content || !receiver) {
       setFormError("Please fill in all the fields correctly.");
       return;
     }
 
     const { data, error } = await supabase
-          .from('announcements_table')
-          .insert({ headline: headline, content: content, receiver: receiver })
-          .select()
-      
-        if (error) {
-          console.log(error)
-          return null
-        }
+      .from("announcements_table")
+      .insert({ headline: headline, content: content, receiver: receiver })
+      .select();
 
-        if (data) {
-          setFormError(null)
-        }
+    if (error) {
+      console.log(error);
+      return null;
+    }
 
-        setHeadline('')
-        setContent('')
-        setReceiver('Student')
-  }
+    if (data) {
+      setFormError(null);
+    }
+
+    setHeadline("");
+    setContent("");
+    setReceiver("Student");
+  };
 
   const handleLogout = () => {
     // Clear the session cookie by setting its expiration date to a past time
@@ -320,8 +282,8 @@ const AdminPage = () => {
         const { error } = await supabase
           .from("user_table")
           .delete()
-          .eq('user_id', deleteUserID);
-        
+          .eq("user_id", deleteUserID);
+
         if (error) {
           throw error;
         }
@@ -334,7 +296,6 @@ const AdminPage = () => {
       console.error("Error deleting user:", error);
     }
   };
-  
 
   return (
     <div className=" mx-auto p-6">
@@ -796,43 +757,18 @@ const AdminPage = () => {
                 Submit
               </button>
 
-
               {formError && (
                 <div className="mt-4 text-red-500">
                   <p>{formError}</p>
                 </div>
               )}
             </form>
-
-            <input
-              type="text"
-              id="studentID"
-              name="studentID"
-              value={addSubjectStudent}
-              onChange={(e) => setAddSubjectStudent(e.target.value)}
-              placeholder="Enter StudentID"
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-
-            <input
-              type="text"
-              id="subjectToAdd"
-              name="subjectToAdd"
-              value={subjectToAdd}
-              onChange={(e) => setSubjectToAdd(e.target.value)}
-              placeholder="Enter Subject"
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-            <button className="border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2" onClick={handleAddSubject}>Add Subject</button>
-
-
           </div>
         </>
       ) : (
         <div className="text-red-600">No session cookie found.</div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 };
 

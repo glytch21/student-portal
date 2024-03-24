@@ -6,6 +6,9 @@ import Navbar from '@/components/NavBar';
 import UpdateProfile from '@/components/UpdateProfile'
 import ProfilePicUpdateModal from '@/components/UpdateProfilePic';
 import Announcement from '@/components/Announcement';
+import Grade12Sched from '@/public/img/Grade-12.png'
+import Grade11Sched from '@/public/img/Grade-11.png'
+import Image from 'next/image';
 
 interface UserData {
   first_name: string;
@@ -37,6 +40,7 @@ const StudentsPage = () => {
   const [isPicUpdateOpen, setIsPicUpdateOpen] = useState<boolean>(false);
   const [uploadMessage, setUploadMessage] = useState<string>('');
   const [myGrades, setmyGrades] = useState<any>([]);
+  const [gradeLevel, setGradeLevel] = useState<any>()
 
 
   useEffect(() => {
@@ -67,6 +71,7 @@ const StudentsPage = () => {
             setUserData(data);
             console.log('hey', data.grades)
             setmyGrades(data.grades)
+            setGradeLevel(data.grade_level)
           }
 
           if (data.role === 'student') {
@@ -222,7 +227,7 @@ const StudentsPage = () => {
               {selectedInfo === 'profile' && (
               <div className="flex p-6 pt-8">
                 {/* Profile Container */}
-                <div className="w-1/3 h-[1%] p-6 pb-[5rem] bg-white rounded-lg shadow-lg relative">
+                <div className="flex-1 h-[1%] p-6 pb-[5rem] bg-white rounded-lg shadow-lg relative">
                   {/* Image and ID */}
                   <div className="flex items-center mb-4">
                     <img
@@ -257,10 +262,24 @@ const StudentsPage = () => {
                   </button>
                 </div>
                 {/* Add your schedule component or content here with appropriate width */}
-                <div className="w-2/3 p-6 h-[87.5vh] bg-white rounded-lg shadow-lg ml-6">
+                <div className="p-3 h-[87vh] bg-white rounded-lg shadow-lg ml-6 overflow-auto">
                   {/* Schedule Component */}
                   {/* Add your schedule content here */}
-                  Schedule
+                  {gradeLevel === '12' ? (
+                    <Image
+                      src={Grade12Sched}
+                      alt="Grade 12 Schedule"
+                    />
+                  ) : gradeLevel === '11' ? (
+                    <Image
+                      src={Grade11Sched}
+                      alt="Grade 11 Schedule"
+                    />
+                  ) : (
+                    <div>
+                      No schedule
+                    </div>
+                  )}
                 </div>
                 {/* Upload message */}
                 {uploadMessage && <p className="text-green-500">{uploadMessage}</p>}

@@ -17,15 +17,22 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "bufferutil": "^4.0.8",
+    "css": "^3.0.0",
     "next": "^13.5.6",
     "postcss": "8.4.30",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "tailwindcss": "3.3.3",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^3.3.3",
     "typescript": "5.2.2",
     "utf-8-validate": "^6.0.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "next.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

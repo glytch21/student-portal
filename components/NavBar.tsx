@@ -78,7 +78,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
   };
 
   return (
-    <nav className="flex justify-between items-center h-60px p-3 bg-gray-800 text-white px-4">
+    <nav className="flex justify-between items-center h-60px p-3 bg-cyan-600 text-white px-4">
 
       {/* Left Side - Navigation Links */}
       <ul className="flex list-none space-x-4">
@@ -147,7 +147,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
               }
             }}
             onBlur={handleInputBlur}
-            className="border border-gray-300 rounded-lg p-2 text-black"
+            className="bg-zinc-200 text-zinc-600  ring-1  ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
           />
           {isSearching && (
             <div className="absolute top-full left-0 w-full bg-white text-black p-2 rounded-md mt-1 z-10 border border-black border-b">
@@ -180,7 +180,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
         </div>
 
         {/* Logout Button */}
-        <button onClick={handleLogout} className="nav-button p-2 bg-red-500 rounded-lg hover:bg-red-600">Logout</button>
+        <button onClick={handleLogout} className="nav-button p-2 bg-red-500 rounded-md text-white uppercase font-semibold p-2 cursor-pointer bg-gradient-to-r from-[#EB3349] to-[#F45C43] px-6 py-2  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-10px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] focus:shadow-[inset_-12px_-8px_40px_#46464620] transition-shadow">Logout</button>
       </div>
 
     </nav>

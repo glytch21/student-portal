@@ -299,8 +299,8 @@ const AdminPage = () => {
 
   return (
     <body className="bg-zinc-100">
-      <nav className="bg-cyan-600 px-4 py-3 flex justify-between">
-      <img src="school-logo.png" className="h-8 mr-2" />
+      <nav className="bg-cyan-600 px-4 py-3 flex justify-between items-center fixed top-0 w-full  ">
+        <img src="school-logo.png" className="h-8 mr-2" />
         <div className="mx-auto p-6">
           {sessionCookie && userData ? (
             <div className="absolute top-5 right-5 mb-6 text-2xl font-semibold text-white">
@@ -334,8 +334,8 @@ const AdminPage = () => {
           </li>
         </ul>
       </div>
-      <div className="flex justify-center">
-        <div className="w-1/2 p-6">
+      <div className="flex justify-center mt-16">
+        <div className="w-1/2 p-6 mt-16">
           {showTeachers && (
             <div className="border border-black border-collapse w-full">
               <TeachersTable teacherUsers={teacherUsers} />
@@ -353,7 +353,7 @@ const AdminPage = () => {
                     id="userID"
                     value={userID}
                     onChange={(e) => setID(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                    className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                   />
                 </div>
                 <div>
@@ -365,7 +365,7 @@ const AdminPage = () => {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                    className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                   />
                 </div>
               </div>
@@ -379,7 +379,7 @@ const AdminPage = () => {
                     id="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                    className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                   />
                 </div>
                 <div>
@@ -391,7 +391,7 @@ const AdminPage = () => {
                     id="middleName"
                     value={middleName}
                     onChange={(e) => setMiddleName(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600 font-mono ring-1  ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400 mr-2"
+                    className="bg-zinc-200 text-zinc-600   ring-1  ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
                   />
                 </div>
                 <div>
@@ -403,7 +403,7 @@ const AdminPage = () => {
                     id="lastName"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600 font-mono ring-1  ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400 mr-2"
+                    className="bg-zinc-200 text-zinc-600   ring-1  ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
                   />
                 </div>
               </div>
@@ -431,7 +431,7 @@ const AdminPage = () => {
                       placeholder="Enter User ID"
                       value={deleteUserID}
                       onChange={(e) => setDeleteUserID(e.target.value)}
-                      className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-rose-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-rose-400 mr-2"
+                      className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-rose-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-rose-400 mr-2"
                     />
                     <button
                       onClick={handleDeleteUser}
@@ -447,7 +447,7 @@ const AdminPage = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <div className="w-1/2 p-6">
+        <div className="w-1/2 p-6 mt-16">
           {showStudents && (
             <div className="border border-black border-collapse w-full">
               <StudentsTable studentUsers={parentUsers} />
@@ -465,7 +465,7 @@ const AdminPage = () => {
                     id="userID"
                     value={userID}
                     onChange={(e) => setID(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                    className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                   />
                 </div>
                 <div>
@@ -477,7 +477,7 @@ const AdminPage = () => {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                    className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                   />
                 </div>
               </div>
@@ -491,7 +491,7 @@ const AdminPage = () => {
                     id="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                    className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                   />
                 </div>
                 <div>
@@ -503,7 +503,7 @@ const AdminPage = () => {
                     id="middleName"
                     value={middleName}
                     onChange={(e) => setMiddleName(e.target.value)}
-                    className="bg-zinc-200  text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                    className="bg-zinc-200  text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                   />
                 </div>
                 <div>
@@ -515,7 +515,7 @@ const AdminPage = () => {
                     id="lastName"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="bg-zinc-200  text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                    className="bg-zinc-200  text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                   />
                 </div>
               </div>
@@ -575,7 +575,7 @@ const AdminPage = () => {
                       id="userID"
                       value={userID}
                       onChange={(e) => setID(e.target.value)}
-                      className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                      className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                     />
                   </div>
                   <div>
@@ -587,7 +587,7 @@ const AdminPage = () => {
                       id="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                      className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                     />
                   </div>
                 </div>
@@ -601,11 +601,11 @@ const AdminPage = () => {
                       id="firstName"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                      className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                     />
                   </div>
                   <div>
-                    <label htmlFor="middleName" className="block mb-1">
+                    <label htmlFor="middleName" className="block mb-1 ml-5">
                       Middle Name:
                     </label>
                     <input
@@ -613,11 +613,11 @@ const AdminPage = () => {
                       id="middleName"
                       value={middleName}
                       onChange={(e) => setMiddleName(e.target.value)}
-                      className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                      className="bg-zinc-200 text-zinc-600 ml-5 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                     />
                   </div>
                   <div>
-                    <label htmlFor="lastName" className="block mb-1">
+                    <label htmlFor="lastName" className="block mb-1 ml-9">
                       Last Name:
                     </label>
                     <input
@@ -625,7 +625,7 @@ const AdminPage = () => {
                       id="lastName"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="bg-zinc-200 text-zinc-600 font-mono ring-1 ring-zinc-400 focus:ring-2 focus:ring-yellow-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-yellow-400"
+                      className="bg-zinc-200 text-zinc-600 ml-9 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                     />
                   </div>
                 </div>
@@ -675,75 +675,76 @@ const AdminPage = () => {
         Logout
       </button>
       <button onClick={handleTest}>test</button>
+
       <div>
-        <div className="flex items-center justify-center h-full mb-3 text-3xl font-semibold">Announcement</div>
-      <form onSubmit={handleSubmit}
-                className="max-w-lg mx-auto  p-4 border rounded-lg shadow-md bg-white"
-              >
-                <div className="mb-4">
-                  <label
-                    htmlFor="headline"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Headline:
-                  </label>
-                  <input
-                    type="text"
-                    id="headline"
-                    name="headline"
-                    value={headline}
-                    onChange={(e) => setHeadline(e.target.value)}
-                    placeholder="Enter headline"
-                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                  />
-                </div>
+        <div className="flex items-center justify-center mb-3 text-3xl font-semibold">
+          Announcement
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-1/4vw lg:max-w-xl mx-auto p-4 border rounded-lg shadow-md bg-white"
+        >
+          <div className="mb-4">
+            <label
+              htmlFor="headline"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Headline:
+            </label>
+            <input
+              type="text"
+              id="headline"
+              name="headline"
+              value={headline}
+              onChange={(e) => setHeadline(e.target.value)}
+              placeholder="Enter headline"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+            />
+          </div>
 
-                <div className="mb-4">
-                  <label
-                    htmlFor="content"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Content:
-                  </label>
-                  <textarea
-                    id="content"
-                    name="content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Enter content"
-                    rows={4}
-                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                  ></textarea>
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="receiver"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Receiver:
-                  </label>
-                  <select
-                    id="receiver"
-                    name="receiver"
-                    value={receiver}
-                    onChange={(e) => setReceiver(e.target.value)}
-                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                  >
-                    <option value="student">Student</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="parent">Parent</option>
-                  </select>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  Submit
-                </button>
-
-
-
-      </form>
+          <div className="mb-4">
+            <label
+              htmlFor="content"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Content:
+            </label>
+            <textarea
+              id="content"
+              name="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Enter content"
+              rows={4}
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="receiver"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Receiver:
+            </label>
+            <select
+              id="receiver"
+              name="receiver"
+              value={receiver}
+              onChange={(e) => setReceiver(e.target.value)}
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+            >
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="parent">Parent</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Submit
+          </button>
+        </form>
       </div>
     </body>
   );

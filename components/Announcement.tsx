@@ -7,6 +7,23 @@ const Announcement = ({ role, className }:any) => {
 
     const capitalizeFirstLetter = (str:any) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    const formatDateString = (timestamp:any) => {
+        // Create a Date object from the timestamp string
+        const dateObj = new Date(timestamp);
+      
+        // Options for formatting the date
+        const options:any = { 
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        };
+      
+        // Format the date using Intl.DateTimeFormat
+        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(dateObj);
+        
+        return formattedDate;
       }
 
     const updateAnnouncement = () => {
@@ -113,6 +130,9 @@ const Announcement = ({ role, className }:any) => {
                                 {capitalizeFirstLetter(data.receiver)}
                             </div>
                             )}
+                            <div className="text-gray-400 text-sm font-normal">
+                                {formatDateString(data.created_at)}
+                            </div>
                         </div>
                     </div>
                     <div className="bg-gray-300 h-[1px] w-[100%]">

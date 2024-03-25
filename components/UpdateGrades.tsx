@@ -23,7 +23,7 @@ const UpdateGrades: React.FC<Props> = ({ onClose, userData }) => {
         return;
       }
 
-      alert('Grades and comments updated in Supabase');
+      alert('Successfully updated comments');
       onClose();
 
       // Update local state to reflect changes

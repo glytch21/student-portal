@@ -331,7 +331,7 @@ const AdminPage = () => {
   };
 
   return (
-    <body className="bg-zinc-100">
+    <body className="bg-gray-100">
       <nav className="bg-cyan-600 p-6 flex items-center gap-1 relative top-0 w-full justify-end">
         <div className="text-2xl font-semibold text-white flex gap-4 items-center drop-shadow-lg">
             Admin {sessionCookie && userData ? userData.first_name : '...'}
@@ -383,9 +383,9 @@ const AdminPage = () => {
         </div>
       </nav>
       {showTeachers && (
-        <div className="container mx-auto p-4">
+        <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
           <TeachersTable teacherUsers={teacherUsers} />
-          {/* <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
+          <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label htmlFor="userID" className="block mb-1">
@@ -485,13 +485,13 @@ const AdminPage = () => {
                 </div>
               )}
             </div>
-          </form> */}
+          </form>
         </div>
       )}
       {showStudents && (
-        <div className="container mx-auto p-4">
+        <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
           <StudentsTable studentUsers={parentUsers} />
-          {/* <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
+          <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label htmlFor="userID" className="block mb-1">
@@ -610,13 +610,13 @@ const AdminPage = () => {
                 </div>
               )}
             </div>
-          </form> */}
+          </form>
         </div>
       )}
       {showParents && (
-        <div className="container mx-auto p-4">
+        <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
           <ParentsTable parentUsers={parentUsers} />
-          {/* <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
+          <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label htmlFor="userID" className="block mb-1">
@@ -715,12 +715,13 @@ const AdminPage = () => {
                 </div>
               )}
             </div>
-          </form> */}
+          </form>
         </div>
       )}
       {showAnnouncement && (
-        <div>
-          <Announcement />
+        <div className={`${toggleSidebar && 'ml-[20rem]'} flex items-center justify-center gap-4`}>
+          <AnnouncementAdmin />
+          <Announcement role={'admin'} className={'absolute right-[10rem] bottom-0'} />
         </div>
       )}
       <button

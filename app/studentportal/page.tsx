@@ -461,7 +461,10 @@ const StudentsPage = () => {
 
               {selectedInfo === 'announcement' && (
                 <div>
-                  <Announcement />
+                  {userData.role === 'teacher' && ( <Announcement role={'teacher'} /> )}
+                  {userData.role === 'student' && ( <Announcement role={'student'} /> )}
+                  {userData.role === 'parent' && ( <Announcement role={'parent'} /> )}
+                  
                 </div>
               )}
             </div>

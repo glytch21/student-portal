@@ -2,24 +2,50 @@
 import { useState, useEffect } from "react"
 import supabase from '@/config/client';
 
-const Announcement = () => {
+const Announcement = ({ role, className }:any) => {
     const [announcement, setAnnouncement] = useState<any>([])
 
+    const capitalizeFirstLetter = (str:any) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+
+    const updateAnnouncement = () => {
+        fetchAnnouncementData()
+    }
+
     const fetchAnnouncementData = async () => {
-        const { data, error } = await supabase
-            .from('announcements_table')
-            .select('*')
-
-            if (error) {
-                console.log('FetchError:', error)
-                return null
-            }
-
-            if (data) {
-                setAnnouncement(data)
-                console.log('data is', data)
-                console.log('announcement is', announcement)
-            }
+        if (role === 'admin') {
+            const { data, error } = await supabase
+                .from('announcements_table')
+                .select('*')
+    
+                if (error) {
+                    console.log('FetchError:', error)
+                    return null
+                }
+    
+                if (data) {
+                    setAnnouncement(data)
+                    console.log('data is', data)
+                    console.log('announcement is', announcement)
+                }
+        } else {
+            const { data, error } = await supabase
+                .from('announcements_table')
+                .select('*')
+                .eq('receiver', role)
+    
+                if (error) {
+                    console.log('FetchError:', error)
+                    return null
+                }
+    
+                if (data) {
+                    setAnnouncement(data)
+                    console.log('data is', data)
+                    console.log('announcement is', announcement)
+                }
+        }
     }
 
     // const addRow = async () => {
@@ -69,16 +95,25 @@ const Announcement = () => {
     }, [])
     
     return (
-    <div className="flex flex-col p-16 overflow-auto w-[40%] h-[90vh] mx-auto">
+    <div className={`${className} flex flex-col p-16 overflow-auto w-[40%] h-[90vh] mx-auto`}>
     { announcement.length !== 0 ? (
         <>
-            <div className="top-[6rem] left-[6rem] text-4xl font-bold">
-                Announcement
+            <div className="flex flex-col items-center justify-between top-[6rem] left-[6rem] text-4xl font-bold">
+                <div className="text-base font-normal text-white p-4 bg-cyan-600 rounded-md cursor-pointer hover:bg-cyan-500" onClick={updateAnnouncement}>
+                    Update Announcement
+                </div>
             </div>
             { announcement.slice().reverse().map((data:any) => (
                 <div className="flex flex-col gap-4 bg-white mt-10 p-10 shadow-lg border border-gray-200 rounded-lg">
                     <div className="font-semibold text-lg text-left">
-                        {data.headline}
+                        <div className="flex items-center justify-between">
+                            {data.headline}
+                            {role === 'admin' && (
+                            <div className="text-gray-500">
+                                {capitalizeFirstLetter(data.receiver)}
+                            </div>
+                            )}
+                        </div>
                     </div>
                     <div className="bg-gray-300 h-[1px] w-[100%]">
                         {/* Horizontal Line */}

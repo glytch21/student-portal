@@ -124,7 +124,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
   };
 
   return (
-    <nav className="flex justify-between items-center h-60px p-3 bg-cyan-600 text-white px-4">
+    <nav className="flex justify-between items-center h-60px p-4 bg-cyan-600 text-white px-4">
 
       {/* nav for students */}
 
@@ -155,7 +155,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
                   handleSearch()
                 }}
                 onBlur={handleInputBlur}
-                className="bg-zinc-200 text-zinc-600  ring-1  ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
+                className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
               />
               {isSearching && (
                 <div className="absolute top-full left-0 w-full bg-white text-black p-2 rounded-md mt-1 z-10 border border-black border-b">
@@ -206,7 +206,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
             )}
 
             <li>
-              <button onClick={handleLogout} className="nav-button p-2 bg-red-500 rounded-md text-white uppercase font-semibold p-2 cursor-pointer bg-gradient-to-r from-[#EB3349] to-[#F45C43] px-6 py-2  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-10px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] focus:shadow-[inset_-12px_-8px_40px_#46464620] transition-shadow">Logout</button>
+              <button onClick={handleLogout} className="nav-button bg-red-500 rounded-md text-white uppercase font-semibold p-2 cursor-pointer bg-gradient-to-r from-[#EB3349] to-[#F45C43] px-6 py-2  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-10px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] focus:shadow-[inset_-12px_-8px_40px_#46464620] transition-shadow">Logout</button>
             </li>
           </div>
         </ul>
@@ -230,71 +230,72 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
             <button onClick={announcementButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
           </li>
 
-
-          <li className="relative">
-            <input
-              type="text"
-              id="searchValue"
-              value={searchValue}
-              onChange={handleSearchValue}
-              placeholder="Search User..."
-              onKeyPress={(e) => {
-                handleSearch()
-              }}
-              onBlur={handleInputBlur}
-              className="bg-zinc-200 text-zinc-600  ring-1  ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
-            />
-            {isSearching && (
-              <div className="absolute top-full left-0 w-full bg-white text-black p-2 rounded-md mt-1 z-10 border border-black border-b">
-                <div>
-                  {resultUsers.map((user: any) => (
-                    <div
-                      key={user.id}
-                      className="bg-white text-black p-2 rounded-md border border-black cursor-pointer flex items-center"
-                      onClick={() => handleOpenModal(user)}
-                    >
-                      <img
-                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${user.profile_image}`}
-                        alt="Profile Picture"
-                        className="object-contain rounded-full shadow-lg w-10 h-10 mr-4"
-                        style={{ fontSize: '1.5em' }}
-                      />
-                      <div>
-                        <div className="mb-1" style={{ fontSize: '13px' }}>{user.first_name} {user.last_name}</div>
+          <div className='flex items-center absolute right-6'>
+            <li className="relative">
+              <input
+                type="text"
+                id="searchValue"
+                value={searchValue}
+                onChange={handleSearchValue}
+                placeholder="Search User..."
+                onKeyPress={(e) => {
+                  handleSearch()
+                }}
+                onBlur={handleInputBlur}
+                className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
+              />
+              {isSearching && (
+                <div className="absolute top-full left-0 w-full bg-white text-black p-2 rounded-md mt-1 z-10 border border-black border-b">
+                  <div>
+                    {resultUsers.map((user: any) => (
+                      <div
+                        key={user.id}
+                        className="bg-white text-black p-2 rounded-md border border-black cursor-pointer flex items-center"
+                        onClick={() => handleOpenModal(user)}
+                      >
+                        <img
+                          src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${user.profile_image}`}
+                          alt="Profile Picture"
+                          className="object-contain rounded-full shadow-lg w-10 h-10 mr-4"
+                          style={{ fontSize: '1.5em' }}
+                        />
+                        <div>
+                          <div className="mb-1" style={{ fontSize: '13px' }}>{user.first_name} {user.last_name}</div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
 
-                  {lastnameResults.map((user: any) => (
-                    <div
-                      key={user.id}
-                      className="bg-white text-black p-2 rounded-md border border-black cursor-pointer flex items-center"
-                      onClick={() => handleOpenModal(user)}
-                    >
-                      <img
-                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${user.profile_image}`}
-                        alt="Profile Picture"
-                        className="object-contain rounded-full shadow-lg w-10 h-10 mr-4"
-                        style={{ fontSize: '1.5em' }}
-                      />
-                      <div>
-                        <div className="mb-1" style={{ fontSize: '13px' }}>{user.first_name} {user.last_name}</div>
+                    {lastnameResults.map((user: any) => (
+                      <div
+                        key={user.id}
+                        className="bg-white text-black p-2 rounded-md border border-black cursor-pointer flex items-center"
+                        onClick={() => handleOpenModal(user)}
+                      >
+                        <img
+                          src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${user.profile_image}`}
+                          alt="Profile Picture"
+                          className="object-contain rounded-full shadow-lg w-10 h-10 mr-4"
+                          style={{ fontSize: '1.5em' }}
+                        />
+                        <div>
+                          <div className="mb-1" style={{ fontSize: '13px' }}>{user.first_name} {user.last_name}</div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
 
+                  </div>
                 </div>
-              </div>
+              )}
+            </li>
+            {profileInfoModal && (
+              <ProfileInfo user={profileInfo} onClose={handleCloseModal} />
             )}
-          </li>
 
-          {profileInfoModal && (
-            <ProfileInfo user={profileInfo} onClose={handleCloseModal} />
-          )}
+            <li>
+              <button onClick={handleLogout} className="nav-button p-2 bg-red-500 rounded-md text-white uppercase font-semibold cursor-pointer bg-gradient-to-r from-[#EB3349] to-[#F45C43] px-6 py-2  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-10px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] focus:shadow-[inset_-12px_-8px_40px_#46464620] transition-shadow">Logout</button>
+            </li>
+          </div>
 
-          <li>
-            <button onClick={handleLogout} className="nav-button p-2 bg-red-500 rounded-md text-white uppercase font-semibold p-2 cursor-pointer bg-gradient-to-r from-[#EB3349] to-[#F45C43] px-6 py-2  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-10px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] focus:shadow-[inset_-12px_-8px_40px_#46464620] transition-shadow">Logout</button>
-          </li>
 
         </ul>
       )}
@@ -316,10 +317,11 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
             <button onClick={announcementButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
           </li>
 
-
-          <li>
-            <button onClick={handleLogout} className="nav-button p-2 bg-red-500 rounded-md text-white uppercase font-semibold p-2 cursor-pointer bg-gradient-to-r from-[#EB3349] to-[#F45C43] px-6 py-2  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-10px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] focus:shadow-[inset_-12px_-8px_40px_#46464620] transition-shadow">Logout</button>
-          </li>
+          <div className='flex items-center absolute right-6'>
+            <li>
+              <button onClick={handleLogout} className="nav-button bg-red-500 rounded-md text-white uppercase font-semibold p-2 cursor-pointer bg-gradient-to-r from-[#EB3349] to-[#F45C43] px-6 py-2  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-10px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] focus:shadow-[inset_-12px_-8px_40px_#46464620] transition-shadow">Logout</button>
+            </li>
+          </div>
         </ul>
       )}
     </nav>

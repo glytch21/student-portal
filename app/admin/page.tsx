@@ -33,10 +33,45 @@ const AdminPage = () => {
   const [deleteUserID, setDeleteUserID] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const [addSubjectStudent, setAddSubjectStudent] = useState('')
+  const [subjectToAdd, setSubjectToAdd] = useState('')
+
   const [headline, setHeadline] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [receiver, setReceiver] = useState<string>("Student");
   const [formError, setFormError] = useState<any>(null);
+
+
+  const handleAddSubject = async () => {
+    const { data: initial, error } = await supabase
+      .from('user_table')
+      .select('grades')
+      .eq('user_id', addSubjectStudent);
+
+    if (initial) {
+      console.log('initial', initial);
+      // Assuming grades is an array within each user's data
+      let updatedGrades = [...initial[0].grades]; // Create a copy of the grades array
+
+      // Push the new subject to the copied grades array
+      updatedGrades.push({
+        subject: subjectToAdd,
+        grade: 'Not Yet Available'
+      });
+
+      // Update the user_table with the new grades data
+      const { data: updatedData, error: updateError } = await supabase
+        .from('user_table')
+        .update({ grades: updatedGrades })
+        .eq('user_id', addSubjectStudent);
+
+        alert('Subject added successfully');
+
+    } else {
+      // Handle case where initial data is empty or undefined
+      alert('Initial data not found or empty: ' + error.message);
+    }
+  };
 
   useEffect(() => {
     // Function to retrieve the value of the session cookie
@@ -300,7 +335,7 @@ const AdminPage = () => {
   return (
     <body className="bg-zinc-100">
       <nav className="bg-cyan-600 px-4 py-3 flex justify-between items-center fixed top-0 w-full  ">
-        <img src="school-logo.png" className="h-8 mr-2" />
+        <img src="./img/school-logo.png" className="h-8 mr-2" />
         <div className="mx-auto p-6">
           {sessionCookie && userData ? (
             <div className="absolute top-5 right-5 mb-6 text-2xl font-semibold text-white">
@@ -534,6 +569,26 @@ const AdminPage = () => {
                   >
                     Delete User
                   </button>
+                  <input
+                    type="text"
+                    id="studentID"
+                    name="studentID"
+                    value={addSubjectStudent}
+                    onChange={(e) => setAddSubjectStudent(e.target.value)}
+                    placeholder="Enter StudentID"
+                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  />
+
+                  <input
+                    type="text"
+                    id="subjectToAdd"
+                    name="subjectToAdd"
+                    value={subjectToAdd}
+                    onChange={(e) => setSubjectToAdd(e.target.value)}
+                    placeholder="Enter Subject"
+                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  />
+                  <button className="border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2" onClick={handleAddSubject}>Add Subject</button>
                 </div>
                 {showDeleteModal && (
                   <div className="">

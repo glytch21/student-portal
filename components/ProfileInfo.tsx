@@ -21,7 +21,9 @@ const ProfilePicUpdateModal: React.FC<Props> = ({ user, onClose }) => {
         />
         <div>
           <p className="text-2xl font-semibold text-black">{user.first_name} {user.last_name}</p>
-          <p className="text-lg text-gray-600">{user.grade_level}</p>
+          {user.role === 'student' && (<p className="text-lg text-gray-600">Grade: {user.grade_level}</p>)}
+          {user.role === 'teacher' && (<p className="text-lg text-gray-600">Homeroom Adviser</p>)}
+          {user.role === 'parent' && (<p className="text-lg text-gray-600">Parent</p>)}
         </div>
         <button onClick={onClose} className="ml-auto mt-1 text-gray-600 hover:text-gray-800 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -9,6 +9,8 @@ import Announcement from '@/components/Announcement';
 import Grade12Sched from '@/public/img/Grade-12.png'
 import Grade11Sched from '@/public/img/Grade-11.png'
 import Image from 'next/image';
+import UpdateGrades from '@/components/UpdateGrades';
+
 
 interface UserData {
   first_name: string;
@@ -41,6 +43,10 @@ const StudentsPage = () => {
   const [uploadMessage, setUploadMessage] = useState<string>('');
   const [myGrades, setmyGrades] = useState<any>([]);
   const [gradeLevel, setGradeLevel] = useState<any>()
+  const [isUpdateGradesOpen, setIsUpdateGradesOpen] = useState<boolean>(false);
+  const [childData, setChildData] = useState<any>([]);
+  const [studentUsers, setStudentUsers] = useState<any[]>([]);
+  const [selectedStudentData, setSelectedStudentData] = useState(null);
 
 
   useEffect(() => {
@@ -69,13 +75,16 @@ const StudentsPage = () => {
           }
           if (data) {
             setUserData(data);
-            console.log('hey', data.grades)
             setmyGrades(data.grades)
             setGradeLevel(data.grade_level)
           }
 
           if (data.role === 'student') {
             getParent();
+          }
+
+          if (data.role === 'parent') {
+            getChild(data.children);
           }
 
         } catch (error) {
@@ -112,7 +121,18 @@ const StudentsPage = () => {
     fetchUserData();
   }, []);
 
+  const getChild = async (ID: any) => {
+    const { data, error } = await supabase
+      .from('user_table')
+      .select('*')
+      .eq('user_id', ID)
+      .single()
 
+    if (data) {
+      setChildData(data)
+      console.log('child', data)
+    }
+  }
 
   const handleProfileClick = () => {
     setSelectedInfo('profile'); // Set selectedInfo to 'profile' when profile is clicked
@@ -123,6 +143,7 @@ const StudentsPage = () => {
   };
 
   const handleClassClick = () => {
+    fetchStudentUsers();
     setSelectedInfo('class');
   };
 
@@ -136,6 +157,15 @@ const StudentsPage = () => {
 
   const handleCloseProfileModal = () => {
     setIsProfileModalOpen(false); // Close the modal
+  };
+
+  const handleOpenUpdateGrades = (user: any) => {
+    setSelectedStudentData(user)
+    setIsUpdateGradesOpen(true); // Open the modal
+  };
+
+  const handleCloseUpdateGrades = () => {
+    setIsUpdateGradesOpen(false); // Close the modal
   };
 
   const handleOpenPicUpdateModal = () => {
@@ -152,61 +182,23 @@ const StudentsPage = () => {
   const [newGrade, setNewGrade] = useState<string>('')
   const [studentToGrade, setStudentToGrade] = useState<any>('')
 
-  const handleTest = async () => {
-    const { data, error } = await supabase
-      .from("user_table")
-      .select("*")
-      .eq("user_id", studentToGrade)
-
-
-    if (data) {
-      setInitialGrades(data![0].grades)
-      console.log(data![0].grades)
-    }
-
-  }
-
-  const handleTest2 = async (subjectToUpdate: any, newGrade: string, studentToGrade: any) => {
-    // Find the index of the subject to update in the initialGrades array
-    const index = initialGrades.findIndex((item: { subject: string; grade: string; }) => item.subject === subjectToUpdate);
-
-    if (index !== -1) {
-      // Update the grade locally
-      initialGrades[index].grade = newGrade;
-      console.log(`Grade of ${subjectToUpdate} updated to ${newGrade}`);
-
-      try {
-
-
-        // Update the 'grades' column in the 'user_table' using Supabase
-        const { data, error } = await supabase
-          .from("user_table")
-          .update({ grades: initialGrades })
-          .eq("user_id", studentToGrade)
-          .select("grades");
-
-        if (error) {
-          throw error;
-        }
-
-        console.log('Grades updated in Supabase:', data);
-      } catch (error) {
-        console.error('Error updating grades in Supabase:', error);
+  const fetchStudentUsers = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('user_table')
+        .select('*');
+      if (error) {
+        throw error;
       }
-    } else {
-      console.log(`Subject ${subjectToUpdate} not found`);
+      if (data) {
+        const students = data.filter((user: any) => user.role === 'student');
+        setStudentUsers(students)
+      }
+    } catch (error) {
+      console.log('Error fetching data:', error);
     }
   }
 
-  const handleTest3 = () => {
-    handleTest2(subjectToUpdate, newGrade, studentToGrade)
-  }
-
-  const updatestudent = (e: any) => {
-    const value = e.target.value
-
-    setStudentToGrade(value)
-  }
 
   return (
     <div className='flex h-screen bg-gray-100'>
@@ -221,125 +213,249 @@ const StudentsPage = () => {
                 gradesButtonClick={handleGradesClick}
                 classButtonClick={handleClassClick}
                 announcementButtonClick={handleAnnouncementClick}
-                role={userData.role}
               />
 
-              {selectedInfo === 'profile' && (
-              <div className="flex p-6 pt-8">
-                {/* Profile Container */}
-                <div className="flex-1 h-[1%] p-6 pb-[5rem] bg-white rounded-lg shadow-lg relative">
-                  {/* Image and ID */}
-                  <div className="flex items-center mb-4">
-                    <img
-                      onClick={handleOpenPicUpdateModal}
-                      src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${userData.profile_image}`}
-                      alt="Profile Picture"
-                      className="object-contain cursor-pointer rounded-full shadow-lg w-32 h-32 hover:opacity-75 transition-opacity duration-300 mr-4"
-                    />
-                    <div>
-                      <p className="text-2xl font-semibold mb-1">ID: {sessionCookie}</p>
-                      {/* Add any other ID-related info here */}
+              {(userData.role === 'student' || userData.role === 'teacher') && selectedInfo === 'profile' && (
+                <div className="flex p-6 pt-8">
+                  {/* Profile Container */}
+                  <div className="flex-1 h-[1%] p-6 pb-[5rem] bg-white rounded-lg shadow-lg relative">
+                    {/* Image and ID */}
+                    <div className="flex items-center mb-4">
+                      <img
+                        onClick={handleOpenPicUpdateModal}
+                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${userData.profile_image}`}
+                        alt="Profile Picture"
+                        className="object-contain cursor-pointer rounded-full shadow-lg w-32 h-32 hover:opacity-75 transition-opacity duration-300 mr-4"
+                      />
+                      <div>
+                        <p className="text-2xl font-semibold mb-1">ID: {sessionCookie}</p>
+                        {/* Add any other ID-related info here */}
+                      </div>
                     </div>
-                  </div>
-                  {/* Name */}
-                  <div className="mb-4">
-                    <p className="text-left text-2xl font-semibold">Name: {userData.first_name} {userData.last_name}</p>
-                  </div>
-                  {/* Address */}
-                  <div className="mb-4">
-                    <p className="text-left text-lg text-gray-600">Address: {userData.address}</p>
-                  </div>
-                  {/* Contact */}
-                  <div className="mb-4">
-                    <p className="text-left text-lg text-gray-600">Contact Number: {userData.contact_number}</p>
-                  </div>
-                  {/* Update Profile Button */}
-                  <button
-                    onClick={handleOpenProfileModal}
-                    className="absolute bottom-6 left-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600"
-                  >
-                    Update Profile
-                  </button>
-                </div>
-                {/* Add your schedule component or content here with appropriate width */}
-                <div className="p-3 h-[87vh] bg-white rounded-lg shadow-lg ml-6 overflow-auto">
-                  {/* Schedule Component */}
-                  {/* Add your schedule content here */}
-                  {gradeLevel === '12' ? (
-                    <Image
-                      src={Grade12Sched}
-                      alt="Grade 12 Schedule"
-                    />
-                  ) : gradeLevel === '11' ? (
-                    <Image
-                      src={Grade11Sched}
-                      alt="Grade 11 Schedule"
-                    />
-                  ) : (
-                    <div>
-                      No schedule
+                    {/* Name */}
+                    <div className="mb-4">
+                      <p className="text-left text-2xl font-semibold">Name: {userData.first_name} {userData.last_name}</p>
                     </div>
+                    {/* Address */}
+                    <div className="mb-4">
+                      <p className="text-left text-lg text-gray-600">Address: {userData.address}</p>
+                    </div>
+                    {/* Contact */}
+                    <div className="mb-4">
+                      <p className="text-left text-lg text-gray-600">Contact Number: {userData.contact_number}</p>
+                    </div>
+                    {/* Update Profile Button */}
+                    <button
+                      onClick={handleOpenProfileModal}
+                      className="absolute bottom-6 left-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600"
+                    >
+                      Update Profile
+                    </button>
+                  </div>
+                  {/* Add your schedule component or content here with appropriate width */}
+                  <div className="p-3 h-[83.5vh] bg-white rounded-lg shadow-lg ml-6 overflow-auto">
+                    {/* Schedule Component */}
+                    {/* Add your schedule content here */}
+                    {gradeLevel === '12' ? (
+                      <Image
+                        src={Grade12Sched}
+                        alt="Grade 12 Schedule"
+                      />
+                    ) : gradeLevel === '11' ? (
+                      <Image
+                        src={Grade11Sched}
+                        alt="Grade 11 Schedule"
+                      />
+                    ) : (
+                      <div>
+                        No schedule
+                      </div>
+                    )}
+                  </div>
+                  {/* Upload message */}
+                  {uploadMessage && <p className="text-green-500">{uploadMessage}</p>}
+
+                  {/* Profile update modal */}
+                  {isProfileModalOpen && (
+                    <UpdateProfile onClose={handleCloseProfileModal} userData={userData} />
                   )}
-                </div>
-                {/* Upload message */}
-                {uploadMessage && <p className="text-green-500">{uploadMessage}</p>}
-  
-                {/* Profile update modal */}
-                {isProfileModalOpen && (
-                  <UpdateProfile onClose={handleCloseProfileModal} userData={userData} />
-                )}
-  
-                {isPicUpdateOpen && (
-                  <ProfilePicUpdateModal onClose={handleClosePicUpdateModal} userData={userData} />
-                )}
-              </div>)}
 
-              {/* test */}
-              {selectedInfo === 'grades' && (
-                <div className="grid grid-cols-2 gap-4">
-                  {myGrades.map((user: any) => (
-                    <div key={user.subject} className="bg-gray-100 p-4 rounded-lg shadow-md">
-                      <h2 className="text-lg font-semibold mb-2">{user.subject}</h2>
-                      <p className="text-gray-600">Grade: {user.grade}</p>
+                  {isPicUpdateOpen && (
+                    <ProfilePicUpdateModal onClose={handleClosePicUpdateModal} userData={userData} />
+                  )}
+                </div>)}
+
+              {/* PArent */}
+              {userData.role === 'parent' && selectedInfo === 'profile' && childData && (
+                <div className="flex p-6 pt-8">
+                  {/* Profile Container */}
+                  <div className="flex-1 h-[1%] p-6 pb-[5rem] bg-white rounded-lg shadow-lg relative">
+                    {/* Image and ID */}
+                    <div className="flex items-center mb-4">
+                      <img
+                        onClick={handleOpenPicUpdateModal}
+                        src={`https://tfvmclypbhyhkgxjmuid.supabase.co/storage/v1/object/public/images/${userData.profile_image}`}
+                        alt="Profile Picture"
+                        className="object-contain cursor-pointer rounded-full shadow-lg w-32 h-32 hover:opacity-75 transition-opacity duration-300 mr-4"
+                      />
+                      <div>
+                        <p className="text-2xl font-semibold mb-1">ID: {sessionCookie}</p>
+                        {/* Add any other ID-related info here */}
+                      </div>
                     </div>
-                  ))}
-                </div>
+                    {/* Name */}
+                    <div className="mb-4">
+                      <p className="text-left text-2xl font-semibold">Name: {userData.first_name} {userData.last_name}</p>
+                    </div>
+                    {/* Address */}
+                    <div className="mb-4">
+                      <p className="text-left text-lg text-gray-600">Address: {userData.address}</p>
+                    </div>
+                    {/* Contact */}
+                    <div className="mb-4">
+                      <p className="text-left text-lg text-gray-600">Contact Number: <b>{userData.contact_number}</b></p>
+                    </div>
+                    <div className="mb-4">
+                      <p className="text-left text-lg text-gray-600">Child: <b>{childData.first_name}</b></p>
+                    </div>
+                    <div className="mb-4">
+                      <p className="text-left text-lg text-gray-600">Child ID: <b>{childData.user_id}</b></p>
+                    </div>
+                    {/* Update Profile Button */}
+                    <button
+                      onClick={handleOpenProfileModal}
+                      className="absolute bottom-6 left-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600"
+                    >
+                      Update Profile
+                    </button>
+                  </div>
+                  {/* Add your schedule component or content here with appropriate width */}
+                  <div className="w-2/3 p-6 h-[74 vh] bg-white rounded-lg shadow-lg ml-6">
+                    {/* Schedule Component */}
+                    {/* Add your schedule content here */}
+                    {childData.first_name}'s Schedule
+                    <div className="p-3 h-[74vh] bg-white rounded-lg shadow-lg ml-6 overflow-auto">
+                      {/* Schedule Component */}
+                      {/* Add your schedule content here */}
+                      {childData.grade_level === '12' ? (
+                        <Image
+                          src={Grade12Sched}
+                          alt="Grade 12 Schedule"
+                        />
+                      ) : childData.grade_level === '11' ? (
+                        <Image
+                          src={Grade11Sched}
+                          alt="Grade 11 Schedule"
+                        />
+                      ) : (
+                        <div>
+                          No schedule
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {/* Upload message */}
+                  {uploadMessage && <p className="text-green-500">{uploadMessage}</p>}
 
+                  {/* Profile update modal */}
+                  {isProfileModalOpen && (
+                    <UpdateProfile onClose={handleCloseProfileModal} userData={userData} />
+                  )}
+
+                  {isPicUpdateOpen && (
+                    <ProfilePicUpdateModal onClose={handleClosePicUpdateModal} userData={userData} />
+                  )}
+
+
+                </div>
               )}
 
-              {selectedInfo === 'class' && (
-                <div className="flex flex-col gap-4">
-                  <input
-                    type="text"
-                    id="studentToGrade"
-                    value={studentToGrade}
-                    onChange={updatestudent}
-                    placeholder="Enter Student ID"
-                    className="w-48 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
-                  />
-                  <select
-                    id="subjectToUpdate"
-                    value={subjectToUpdate}
-                    onChange={(e) => setSubjectToUpdate(e.target.value)}
-                    className="w-48 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
-                  >
-                    <option value="">Select Subject</option>
-                    {initialGrades.map((user: any) => (
-                      <option key={user.subject} value={user.subject}>{user.subject}</option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    id="newGrade"
-                    value={newGrade}
-                    onChange={(e) => setNewGrade(e.target.value)}
-                    placeholder="Enter New Grade"
-                    className="w-48 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
-                  />
-                  <div className="flex">
-                    <button onClick={handleTest} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Fetch</button>
-                    <button onClick={handleTest3} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Update</button>
+              {selectedInfo === 'grades' && userData.role === 'student' && (
+                <div className="relative flex flex-col min-h-screen">
+                  <div className="flex-grow">
+                    {/* Your grid displaying grades */}
+                    <p style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px', marginTop: '20px' }}>MY GRADES</p>
+                    <div className="grid grid-cols-3 gap-4">
+                      {myGrades.map((user: any) => (
+                        <div key={user.subject} className="bg-gray-100 p-4 rounded-lg shadow-md">
+                          <h2 className="text-lg font-semibold mb-2">{user.subject}</h2>
+                          <p className="text-gray-600">Grades: <b>{user.grade}</b></p>
+                        </div>
+                      ))}
+
+
+                    </div>
                   </div>
+                </div>
+              )}
+
+              {selectedInfo === 'grades' && userData.role === 'parent' && (
+                <div className="relative flex flex-col min-h-screen">
+                  <div className="flex-grow">
+                    {/* Your grid displaying grades */}
+                    <p style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px', marginTop: '20px' }}><b>{childData.first_name}'s</b> GRADES</p>
+                    <div className="grid grid-cols-3 gap-4">
+                      {childData.grades.map((user: any) => (
+                        <div key={user.subject} className="bg-gray-100 p-4 rounded-lg shadow-md">
+                          <h2 className="text-lg font-semibold mb-2">{user.subject}</h2>
+                          <p className="text-gray-600">Grade: <b>{user.grade}</b></p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Adviser's comment fixed at the bottom */}
+                  <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md max-w-md mx-auto">
+                    <div className="p-4">
+                      <div className="mt-4">
+                        <h3 className="text-lg font-semibold mb-0">Adviser's Comment</h3>
+                        <p className="text-gray-600">{childData.comments || 'No comments available'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+
+              {selectedInfo === 'class' && (
+                <div className="flex justify-center items-center h-full">
+                  <div>
+                    <table className="border-collapse border w-full" style={{ marginTop: '20px' }}>
+                      <caption style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Student List</caption>
+
+                      <thead>
+                        <tr>
+                          <th className="border p-2">ID</th>
+                          <th className="border p-2">Name</th>
+                          <th className="border p-2">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {studentUsers && (
+                          studentUsers.map((user: any, index: number) => (
+                            <tr key={index}>
+                              <td className="border p-2">{user.user_id}</td>
+                              <td className="border p-2">{user.first_name} {user.last_name}</td>
+                              <td className="border p-2">
+                                <button onClick={() => handleOpenUpdateGrades(user)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                  Update Grades
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+
+
+
+                  </div>
+
+                  {isUpdateGradesOpen && (
+
+                    <UpdateGrades onClose={handleCloseUpdateGrades} userData={selectedStudentData} />
+
+                  )}
+
                 </div>
               )}
 
@@ -356,7 +472,7 @@ const StudentsPage = () => {
           <p className='text-red-500'>Error: Session cookie not found. Please log in.</p>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

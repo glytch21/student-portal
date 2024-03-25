@@ -253,7 +253,7 @@ const StudentsPage = () => {
                     </button>
                   </div>
                   {/* Add your schedule component or content here with appropriate width */}
-                  <div className="p-3 h-[83.5vh] bg-white rounded-lg shadow-lg ml-6 overflow-auto">
+                  <div className={`p-3 ${!gradeLevel && 'w-[60vw]'} h-[83.5vh] bg-white rounded-lg shadow-lg ml-6 overflow-auto`}>
                     {/* Schedule Component */}
                     {/* Add your schedule content here */}
                     {gradeLevel === '12' ? (

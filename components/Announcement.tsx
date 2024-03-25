@@ -69,10 +69,10 @@ const Announcement = () => {
     }, [])
     
     return (
-    <div className="flex flex-col p-16 overflow-auto w-[40%] h-[93vh] mx-auto">
+    <div className="flex flex-col p-16 overflow-auto w-[40%] h-[90vh] mx-auto">
     { announcement.length !== 0 ? (
         <>
-            <div className="absolute top-[6rem] left-10 text-4xl font-bold">
+            <div className="top-[6rem] left-[6rem] text-4xl font-bold">
                 Announcement
             </div>
             { announcement.slice().reverse().map((data:any) => (

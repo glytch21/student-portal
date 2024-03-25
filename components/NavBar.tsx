@@ -143,7 +143,7 @@ const Navbar: React.FC<NavbarProps> = ({ profileButtonClick, gradesButtonClick, 
             <button onClick={announcementButtonClick} style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' }}>Announcements</button>
           </li>
 
-          <div className='flex absolute right-6'>
+          <div className='flex items-center absolute right-6'>
             <li className="relative">
               <input
                 type="text"

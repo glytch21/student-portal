@@ -34,6 +34,7 @@ const AdminPage = () => {
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [gradeLevel, setGradeLevel] = useState("");
   const [role, setRole] = useState("student");
   const [childID, setChildID] = useState("");
   const [error, setError] = useState("");
@@ -317,6 +318,7 @@ const AdminPage = () => {
             last_name: lastName,
             role: role,
             children: childID,
+            grade_level: gradeLevel
           },
         ]);
       if (insertionError) {
@@ -406,13 +408,13 @@ const AdminPage = () => {
             {toggleSidebar && showTeachers && (
               <h1 className="text-xl text-white font-bold drop-shadow-lg">Teacher's Table</h1>
             )}
-            {toggleSidebar && showStudents &&(
+            {toggleSidebar && showStudents && (
               <h1 className="text-xl text-white font-bold drop-shadow-lg">Student's Table</h1>
             )}
-            {toggleSidebar && showParents &&(
+            {toggleSidebar && showParents && (
               <h1 className="text-xl text-white font-bold drop-shadow-lg">Parent's Table</h1>
             )}
-            {toggleSidebar && showDeleteUser &&(
+            {toggleSidebar && showDeleteUser && (
               <h1 className="text-xl text-white font-bold drop-shadow-lg">Delete User</h1>
             )}
 
@@ -589,6 +591,7 @@ const AdminPage = () => {
                   className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                 />
               </div>
+
               <div>
                 <label htmlFor="lastName" className="block mb-1 ">
                   Last Name:
@@ -601,6 +604,17 @@ const AdminPage = () => {
                   className="bg-zinc-200  text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                 />
               </div>
+              <select
+                value={gradeLevel}
+                onChange={(e) => setGradeLevel(e.target.value)}
+                className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                style={{ width: '215px', height: '40px' }} // Adjust the width here
+              >
+                <option value="">Select Grade</option>
+                <option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+              </select>
+
             </div>
             <div className="flex justify-between items-center mb-8">
               <button

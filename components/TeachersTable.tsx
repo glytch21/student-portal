@@ -6,7 +6,7 @@ const TeachersTable = ({ teacherUsers }: any) => {
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
           <div className="overflow-hidden">
-            <table className="min-w-full text-center text-sm font-light text-surface dark:text-white">
+            <table className="min-w-full text-center text-sm font-light text-surface dark:text-black">
               <thead className="border-b border-neutral-200 bg-[#332D2D] font-medium text-white dark:border-white/10">
                 <tr>
                   <th scope="col" className="px-6 py-4">#</th>

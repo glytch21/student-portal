@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import supabase from "@/config/client";
 import bcrypt from "bcryptjs";
-import { useRouter } from "next/navigation";
 import TeachersTable from "@/components/TeachersTable";
 import StudentsTable from "@/components/StudentsTable";
 import ParentsTable from "@/components/ParentsTable";
@@ -13,11 +12,13 @@ import { PiStudentFill as StudentIcon } from "react-icons/pi"
 import { FaChalkboardTeacher as TeacherIcon } from "react-icons/fa";
 import { RiParentFill as ParentIcon } from "react-icons/ri";
 import { MdAnnouncement as AnnouncementIcon } from "react-icons/md";
+import { AiOutlineUserDelete } from "react-icons/ai";
 import SchoolLogo from '@/public/img/school-logo.png'
 
 import { FaCircleArrowLeft as LeftArrow, FaCircleArrowRight as RightArrow } from "react-icons/fa6";
 
 import Image from "next/image";
+import AllUsersTable from "@/components/AllUsersTable";
 
 interface UserData {
   first_name: string;
@@ -38,6 +39,7 @@ const AdminPage = () => {
   const [error, setError] = useState("");
 
   const [showTeachers, setShowTeachers] = useState<boolean>(false);
+  const [showDeleteUser, setShowDeleteUser] = useState<boolean>(false);
   const [showStudents, setShowStudents] = useState<boolean>(false);
   const [showParents, setShowParents] = useState<boolean>(false);
   const [showAnnouncement, setShowAnnouncement] = useState<boolean>(true)
@@ -45,7 +47,6 @@ const AdminPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [sessionCookie, setSessionCookie] = useState("");
   const [deleteUserID, setDeleteUserID] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [addSubjectStudent, setAddSubjectStudent] = useState('')
   const [subjectToAdd, setSubjectToAdd] = useState('')
@@ -78,7 +79,7 @@ const AdminPage = () => {
         .update({ grades: updatedGrades })
         .eq('user_id', addSubjectStudent);
 
-        alert('Subject added successfully');
+      alert('Subject added successfully');
 
     } else {
       // Handle case where initial data is empty or undefined
@@ -121,11 +122,22 @@ const AdminPage = () => {
       }
     };
 
+    const userTable = supabase
+      .channel('custom-all-channel')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'user_table' },
+        (payload: { [key: string]: any }) => {
+          setUserData(payload.new);
+        }
+      )
+      .subscribe();
+
     fetchUserData();
     fetchData();
   }, []);
 
-  
+
 
   const handleLogout = () => {
     // Clear the session cookie by setting its expiration date to a past time
@@ -196,6 +208,14 @@ const AdminPage = () => {
   // };
 
   const toggleTeachersTable = () => {
+    setRole('teacher')
+    setError('')
+    setID("");
+    setPassword("");
+    setFirstName("");
+    setMiddleName("");
+    setLastName("");
+    setShowDeleteUser(false)
     setShowTeachers(true);
     setShowStudents(false); // Close students table
     setShowParents(false); // Close parents table
@@ -203,6 +223,14 @@ const AdminPage = () => {
   };
 
   const toggleStudentsTable = () => {
+    setRole('student')
+    setError('')
+    setID("");
+    setPassword("");
+    setFirstName("");
+    setMiddleName("");
+    setLastName("");
+    setShowDeleteUser(false)
     setShowStudents(true)
     setShowTeachers(false)
     setShowParents(false)
@@ -210,17 +238,42 @@ const AdminPage = () => {
   };
 
   const toggleParentsTable = () => {
+    setRole('parent')
+    setError('')
+    setID("");
+    setPassword("");
+    setFirstName("");
+    setMiddleName("");
+    setLastName("");
+    setShowDeleteUser(false)
     setShowParents(true)
     setShowTeachers(false)
     setShowStudents(false)
     setShowAnnouncement(false)
   };
 
+  const toggleDeleteUserTable = () => {
+    setRole('')
+    setError('')
+    setID("");
+    setPassword("");
+    setFirstName("");
+    setMiddleName("");
+    setLastName("");
+    setShowDeleteUser(true)
+    setShowParents(false)
+    setShowTeachers(false)
+    setShowStudents(false)
+    setShowAnnouncement(false)
+  };
+
   const toggleAnnouncementPage = () => {
+    setError('');
     setShowParents(false)
     setShowTeachers(false)
     setShowStudents(false)
     setShowAnnouncement(true)
+    setShowDeleteUser(false)
   }
   const handleAddUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -277,7 +330,7 @@ const AdminPage = () => {
       setFirstName("");
       setMiddleName("");
       setLastName("");
-      setRole("student");
+      setRole("");
       setChildID("");
       setError("");
     } catch (error) {
@@ -317,12 +370,12 @@ const AdminPage = () => {
           .delete()
           .eq("user_id", deleteUserID);
 
+
         if (error) {
           throw error;
         }
         alert("User deleted successfully");
         fetchData();
-        setShowDeleteModal(false);
         setDeleteUserID("");
       }
     } catch (error) {
@@ -334,12 +387,12 @@ const AdminPage = () => {
     <body className="bg-gray-100">
       <nav className="bg-cyan-600 p-6 flex items-center gap-1 relative top-0 w-full justify-end">
         <div className="text-2xl font-semibold text-white flex gap-4 items-center drop-shadow-lg">
-            Admin {sessionCookie && userData ? userData.first_name : '...'}
-            {/* Admin Photo Here */}
+          Admin {sessionCookie && userData ? userData.first_name : '...'}
+          {/* Admin Photo Here */}
         </div>
         <div className="bg-cyan-600 fixed inset-y-0 left-0">
           <div className="w-8 last:h-8 rounded-full bg-white absolute top-[50%] right-[-1.5vmin] cursor-pointer" onClick={() => setToggleSidebar(!toggleSidebar)}>
-              {toggleSidebar ? ( <LeftArrow className="w-full h-full text-cyan-700 hover:text-cyan-500" /> ) : ( <RightArrow className="w-full h-full text-cyan-700 hover:text-cyan-500 transition-colors"/> ) }
+            {toggleSidebar ? (<LeftArrow className="w-full h-full text-cyan-700 hover:text-cyan-500" />) : (<RightArrow className="w-full h-full text-cyan-700 hover:text-cyan-500 transition-colors" />)}
           </div>
           <div className="p-4 flex justify-center items-center gap-4">
             <Image
@@ -347,9 +400,22 @@ const AdminPage = () => {
               alt="School Logo"
               className="h-[3rem] w-[3rem] drop-shadow-md"
             />
-            {toggleSidebar && (
+            {toggleSidebar && showAnnouncement && (
               <h1 className="text-xl text-white font-bold drop-shadow-lg">Admin Dashboard</h1>
             )}
+            {toggleSidebar && showTeachers && (
+              <h1 className="text-xl text-white font-bold drop-shadow-lg">Teacher's Table</h1>
+            )}
+            {toggleSidebar && showStudents &&(
+              <h1 className="text-xl text-white font-bold drop-shadow-lg">Student's Table</h1>
+            )}
+            {toggleSidebar && showParents &&(
+              <h1 className="text-xl text-white font-bold drop-shadow-lg">Parent's Table</h1>
+            )}
+            {toggleSidebar && showDeleteUser &&(
+              <h1 className="text-xl text-white font-bold drop-shadow-lg">Delete User</h1>
+            )}
+
           </div>
           <div className="w-full h-[1px] bg-white mb-3">
             {/* Line */}
@@ -379,6 +445,14 @@ const AdminPage = () => {
                 {toggleSidebar && 'Parents'}
               </div>
             </div>
+
+            <div onClick={toggleDeleteUserTable}>
+              <div className={`flex gap-3 items-center ${!toggleSidebar && 'justify-center'} p-4 hover:cursor-pointer hover:bg-cyan-700 ${showDeleteUser && 'bg-cyan-700'}`}>
+                <AiOutlineUserDelete className="text-2xl" />
+                {toggleSidebar && 'Delete User'}
+              </div>
+            </div>
+
           </div>
         </div>
       </nav>
@@ -387,33 +461,7 @@ const AdminPage = () => {
           <TeachersTable teacherUsers={teacherUsers} />
           <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label htmlFor="userID" className="block mb-1">
-                  User ID:
-                </label>
-                <input
-                  type="text"
-                  id="userID"
-                  value={userID}
-                  onChange={(e) => setID(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block mb-1">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div>
+              <div className="md:col-span-1">
                 <label htmlFor="firstName" className="block mb-1">
                   First Name:
                 </label>
@@ -422,11 +470,23 @@ const AdminPage = () => {
                   id="firstName"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                 />
               </div>
-              <div>
-                <label htmlFor="middleName" className="block mb-1 ">
+              <div className="md:col-span-1">
+                <label htmlFor="userID" className="block mb-1">
+                  User ID:
+                </label>
+                <input
+                  type="text"
+                  id="userID"
+                  value={userID}
+                  onChange={(e) => setID(e.target.value)}
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                />
+              </div>
+              <div className="md:col-span-1">
+                <label htmlFor="middleName" className="block mb-1">
                   Middle Name:
                 </label>
                 <input
@@ -434,11 +494,23 @@ const AdminPage = () => {
                   id="middleName"
                   value={middleName}
                   onChange={(e) => setMiddleName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1  ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
                 />
               </div>
-              <div>
-                <label htmlFor="lastName" className="block mb-1 ">
+              <div className="md:col-span-1">
+                <label htmlFor="password" className="block mb-1">
+                  Password:
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                />
+              </div>
+              <div className="md:col-span-1">
+                <label htmlFor="lastName" className="block mb-1">
                   Last Name:
                 </label>
                 <input
@@ -446,7 +518,7 @@ const AdminPage = () => {
                   id="lastName"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1  ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
                 />
               </div>
             </div>
@@ -458,68 +530,18 @@ const AdminPage = () => {
                 Add User
               </button>
               {error && <p className="text-red-600 mt-2">{error}</p>}
-              <div className="">
-                <button
-                  onClick={() => setShowDeleteModal(true)}
-                  className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
-                >
-                  Delete User
-                </button>
-              </div>
 
-              {showDeleteModal && (
-                <div className="">
-                  <input
-                    type="text"
-                    placeholder="Enter User ID"
-                    value={deleteUserID}
-                    onChange={(e) => setDeleteUserID(e.target.value)}
-                    className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-rose-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-rose-400 mr-2"
-                  />
-                  <button
-                    onClick={handleDeleteUser}
-                    className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
             </div>
           </form>
         </div>
       )}
+
       {showStudents && (
         <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
           <StudentsTable studentUsers={parentUsers} />
           <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label htmlFor="userID" className="block mb-1">
-                  User ID:
-                </label>
-                <input
-                  type="text"
-                  id="userID"
-                  value={userID}
-                  onChange={(e) => setID(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block mb-1">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div>
                 <label htmlFor="firstName" className="block mb-1">
                   First Name:
                 </label>
@@ -528,7 +550,19 @@ const AdminPage = () => {
                   id="firstName"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                />
+              </div>
+              <div>
+                <label htmlFor="userID" className="block mb-1">
+                  User ID:
+                </label>
+                <input
+                  type="text"
+                  id="userID"
+                  value={userID}
+                  onChange={(e) => setID(e.target.value)}
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                 />
               </div>
               <div>
@@ -541,6 +575,18 @@ const AdminPage = () => {
                   value={middleName}
                   onChange={(e) => setMiddleName(e.target.value)}
                   className="bg-zinc-200  text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block mb-1">
+                  Password:
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                 />
               </div>
               <div>
@@ -564,86 +610,40 @@ const AdminPage = () => {
                 Add User
               </button>
               {error && <p className="text-red-600 mt-2">{error}</p>}
-              <div className="">
-                <button
-                  onClick={() => setShowDeleteModal(true)}
-                  className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
-                >
-                  Delete User
-                </button>
-                <input
-                  type="text"
-                  id="studentID"
-                  name="studentID"
-                  value={addSubjectStudent}
-                  onChange={(e) => setAddSubjectStudent(e.target.value)}
-                  placeholder="Enter StudentID"
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
 
-                <input
-                  type="text"
-                  id="subjectToAdd"
-                  name="subjectToAdd"
-                  value={subjectToAdd}
-                  onChange={(e) => setSubjectToAdd(e.target.value)}
-                  placeholder="Enter Subject"
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-                <button className="border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2" onClick={handleAddSubject}>Add Subject</button>
-              </div>
-              {showDeleteModal && (
-                <div className="">
-                  <input
-                    type="text"
-                    placeholder="Enter User ID"
-                    value={deleteUserID}
-                    onChange={(e) => setDeleteUserID(e.target.value)}
-                    className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
-                  />
-                  <button
-                    onClick={handleDeleteUser}
-                    className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
             </div>
           </form>
+
+          <div className="">
+            <input
+              type="text"
+              id="studentID"
+              name="studentID"
+              value={addSubjectStudent}
+              onChange={(e) => setAddSubjectStudent(e.target.value)}
+              placeholder="Enter StudentID"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+            />
+
+            <input
+              type="text"
+              id="subjectToAdd"
+              name="subjectToAdd"
+              value={subjectToAdd}
+              onChange={(e) => setSubjectToAdd(e.target.value)}
+              placeholder="Enter Subject"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+            />
+            <button className="border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2" onClick={handleAddSubject}>Add Subject</button>
+          </div>
         </div>
       )}
+
       {showParents && (
         <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
           <ParentsTable parentUsers={parentUsers} />
           <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label htmlFor="userID" className="block mb-1">
-                  User ID:
-                </label>
-                <input
-                  type="text"
-                  id="userID"
-                  value={userID}
-                  onChange={(e) => setID(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block mb-1">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
                 <label htmlFor="firstName" className="block mb-1">
                   First Name:
@@ -657,7 +657,19 @@ const AdminPage = () => {
                 />
               </div>
               <div>
-                <label htmlFor="middleName" className="block mb-1 ml-5">
+                <label htmlFor="userID" className="block mb-1">
+                  User ID:
+                </label>
+                <input
+                  type="text"
+                  id="userID"
+                  value={userID}
+                  onChange={(e) => setID(e.target.value)}
+                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                />
+              </div>
+              <div>
+                <label htmlFor="middleName" className="block mb-1">
                   Middle Name:
                 </label>
                 <input
@@ -665,11 +677,23 @@ const AdminPage = () => {
                   id="middleName"
                   value={middleName}
                   onChange={(e) => setMiddleName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ml-5 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="block mb-1 ml-9">
+                <label htmlFor="password" className="block mb-1 ml-5">
+                  Password:
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                />
+              </div>
+              <div>
+                <label htmlFor="lastName" className="block mb-1">
                   Last Name:
                 </label>
                 <input
@@ -677,7 +701,19 @@ const AdminPage = () => {
                   id="lastName"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ml-9 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                />
+              </div>
+              <div>
+                <label htmlFor="childID" className="block mb-1 ml-9">
+                  Child ID:
+                </label>
+                <input
+                  type="number"
+                  id="childID"
+                  value={childID}
+                  onChange={(e) => setChildID(e.target.value)}
+                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
                 />
               </div>
             </div>
@@ -689,35 +725,38 @@ const AdminPage = () => {
                 Add User
               </button>
               {error && <p className="text-red-600 mt-2">{error}</p>}
-              <div className="">
-                <button
-                  onClick={() => setShowDeleteModal(true)}
-                  className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
-                >
-                  Delete User
-                </button>
-              </div>
-              {showDeleteModal && (
-                <div className="">
-                  <input
-                    type="text"
-                    placeholder="Enter User ID"
-                    value={deleteUserID}
-                    onChange={(e) => setDeleteUserID(e.target.value)}
-                    className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
-                  />
-                  <button
-                    onClick={handleDeleteUser}
-                    className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
+
             </div>
           </form>
         </div>
       )}
+
+      {showDeleteUser && (
+        <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
+          <AllUsersTable allUsers={allUsers} />
+          <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+              <div className="">
+                <input
+                  type="text"
+                  placeholder="Enter User ID"
+                  value={deleteUserID}
+                  onChange={(e) => setDeleteUserID(e.target.value)}
+                  className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
+                />
+                <button
+                  onClick={handleDeleteUser}
+                  className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      )}
+
       {showAnnouncement && (
         <div className={`${toggleSidebar && 'ml-[20rem]'} flex items-center justify-center gap-4`}>
           <AnnouncementAdmin />

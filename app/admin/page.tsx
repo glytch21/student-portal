@@ -12,7 +12,7 @@ import { PiStudentFill as StudentIcon } from "react-icons/pi"
 import { FaChalkboardTeacher as TeacherIcon } from "react-icons/fa";
 import { RiParentFill as ParentIcon } from "react-icons/ri";
 import { MdAnnouncement as AnnouncementIcon } from "react-icons/md";
-import { AiOutlineUserDelete } from "react-icons/ai";
+import { FaUserEdit } from "react-icons/fa";
 import SchoolLogo from '@/public/img/school-logo.png'
 
 import { FaCircleArrowLeft as LeftArrow, FaCircleArrowRight as RightArrow } from "react-icons/fa6";
@@ -357,7 +357,7 @@ const AdminPage = () => {
       );
       if (confirmation) {
         // Check if the user has a profile image to delete
-        if (userToDelete.profile_image) {
+        if (userToDelete.profile_image && userToDelete.profile_image !== 'default_image.png') {
           // Remove profile image from Supabase storage
           const { error: imageError } = await supabase.storage
             .from("images")
@@ -372,7 +372,6 @@ const AdminPage = () => {
           .delete()
           .eq("user_id", deleteUserID);
 
-
         if (error) {
           throw error;
         }
@@ -384,6 +383,27 @@ const AdminPage = () => {
       console.error("Error deleting user:", error);
     }
   };
+
+  const handleResetPassword = async () => {
+    try {
+      const newPassword = await bcrypt.hash(deleteUserID, 10);
+
+      const { error } = await supabase
+        .from("user_table")
+        .update({ user_password: newPassword })
+        .eq("user_id", deleteUserID);
+
+      if (error) {
+        throw error;
+      }
+
+      alert("Password reset successfully.");
+    } catch (error) {
+      alert("User doesn't exist");
+    }
+  };
+
+
 
   return (
     <body className="bg-gray-100">
@@ -415,7 +435,7 @@ const AdminPage = () => {
               <h1 className="text-xl text-white font-bold drop-shadow-lg">Parent's Table</h1>
             )}
             {toggleSidebar && showDeleteUser && (
-              <h1 className="text-xl text-white font-bold drop-shadow-lg">Delete User</h1>
+              <h1 className="text-xl text-white font-bold drop-shadow-lg">Edit User</h1>
             )}
 
           </div>
@@ -450,8 +470,8 @@ const AdminPage = () => {
 
             <div onClick={toggleDeleteUserTable}>
               <div className={`flex gap-3 items-center ${!toggleSidebar && 'justify-center'} p-4 hover:cursor-pointer hover:bg-cyan-700 ${showDeleteUser && 'bg-cyan-700'}`}>
-                <AiOutlineUserDelete className="text-2xl" />
-                {toggleSidebar && 'Delete User'}
+                <FaUserEdit className="text-2xl" />
+                {toggleSidebar && 'Edit User'}
               </div>
             </div>
 
@@ -764,6 +784,12 @@ const AdminPage = () => {
                   className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2"
                 >
                   Delete
+                </button>
+                <button
+                  onClick={handleResetPassword}
+                  className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer mt-2"
+                >
+                  Reset Password
                 </button>
               </div>
             </div>

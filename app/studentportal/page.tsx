@@ -14,6 +14,7 @@ import UpdateGrades from '@/components/UpdateGrades';
 
 interface UserData {
   first_name: string;
+  middle_name: string;
   last_name: string;
   grade_level: string;
   role: string;
@@ -234,7 +235,7 @@ const StudentsPage = () => {
                     </div>
                     {/* Name */}
                     <div className="mb-4">
-                      <p className="text-left text-2xl font-semibold">Name: {userData.first_name} {userData.last_name}</p>
+                      <p className="text-left text-2xl font-semibold">Name: {userData.first_name} {userData.middle_name} {userData.last_name}</p>
                     </div>
                     {/* Address */}
                     <div className="mb-4">

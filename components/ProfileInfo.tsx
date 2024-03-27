@@ -7,10 +7,6 @@ interface Props {
 }
 
 const ProfilePicUpdateModal: React.FC<Props> = ({ user, onClose }) => {
-
-  const handleTest = () => {
-    console.log(user)
-  }
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg flex items-start w-96">

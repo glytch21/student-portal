@@ -43,8 +43,6 @@ const Announcement = ({ role, className }:any) => {
     
                 if (data) {
                     setAnnouncement(data)
-                    console.log('data is', data)
-                    console.log('announcement is', announcement)
                 }
         } else {
             const { data, error } = await supabase
@@ -59,8 +57,6 @@ const Announcement = ({ role, className }:any) => {
     
                 if (data) {
                     setAnnouncement(data)
-                    console.log('data is', data)
-                    console.log('announcement is', announcement)
                 }
         }
     }
@@ -115,11 +111,13 @@ const Announcement = ({ role, className }:any) => {
     <div className={`${className} flex flex-col p-16 overflow-auto w-[40%] h-[90vh] mx-auto`}>
     { announcement.length !== 0 ? (
         <>
+            {role === 'admin' && (
             <div className="flex flex-col items-center justify-between top-[6rem] left-[6rem] text-4xl font-bold">
                 <div className="text-base font-normal text-white p-4 bg-cyan-600 rounded-md cursor-pointer hover:bg-cyan-500" onClick={updateAnnouncement}>
                     Update Announcement
                 </div>
             </div>
+            )}
             { announcement.slice().reverse().map((data:any) => (
                 <div className="flex flex-col gap-4 bg-white mt-10 p-10 shadow-lg border border-gray-200 rounded-lg">
                     <div className="font-semibold text-lg text-left">

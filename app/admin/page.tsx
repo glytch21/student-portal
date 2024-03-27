@@ -412,11 +412,11 @@ const AdminPage = () => {
           Admin {sessionCookie && userData ? userData.first_name : '...'}
           {/* Admin Photo Here */}
         </div>
-        <div className="bg-cyan-600 fixed inset-y-0 left-0">
+        <div className={`bg-cyan-600 fixed inset-y-0 left-0 ${toggleSidebar && 'w-[29vmin]'}`}>
           <div className="w-8 last:h-8 rounded-full bg-white absolute top-[50%] right-[-1.5vmin] cursor-pointer" onClick={() => setToggleSidebar(!toggleSidebar)}>
             {toggleSidebar ? (<LeftArrow className="w-full h-full text-cyan-700 hover:text-cyan-500" />) : (<RightArrow className="w-full h-full text-cyan-700 hover:text-cyan-500 transition-colors" />)}
           </div>
-          <div className="p-4 flex justify-center items-center gap-4">
+          <div className="p-4 flex justify-start items-center gap-4">
             <Image
               src={SchoolLogo}
               alt="School Logo"
@@ -666,7 +666,7 @@ const AdminPage = () => {
               value={subjectToAdd}
               onChange={(e) => setSubjectToAdd(e.target.value)}
               placeholder="Enter Subject"
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="mt-2 mb-2 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
             />
             <button className="border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2" onClick={handleAddSubject}>Add Subject</button>
           </div>
@@ -779,18 +779,20 @@ const AdminPage = () => {
                   onChange={(e) => setDeleteUserID(e.target.value)}
                   className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
                 />
-                <button
-                  onClick={handleDeleteUser}
-                  className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2"
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={handleResetPassword}
-                  className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer mt-2"
-                >
-                  Reset Password
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleDeleteUser}
+                    className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={handleResetPassword}
+                    className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer mt-2"
+                  >
+                    Reset Password
+                  </button>
+                </div>
               </div>
             </div>
           </form>

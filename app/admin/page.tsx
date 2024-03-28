@@ -9,20 +9,28 @@ import Announcement from "@/components/Announcement";
 import AnnouncementAdmin from "./component/AnnouncementAdmin";
 
 import { PiStudentFill as StudentIcon } from "react-icons/pi"
-import { FaChalkboardTeacher as TeacherIcon } from "react-icons/fa";
+import { FaChalkboardTeacher as TeacherIcon, FaBook as SubjectIcon } from "react-icons/fa";
 import { RiParentFill as ParentIcon } from "react-icons/ri";
-import { MdAnnouncement as AnnouncementIcon } from "react-icons/md";
 import { FaUserEdit } from "react-icons/fa";
 import SchoolLogo from '@/public/img/school-logo.png'
+import { MdAssignmentAdd as AddAnnouncementIcon } from "react-icons/md";
 
-import { FaCircleArrowLeft as LeftArrow, FaCircleArrowRight as RightArrow } from "react-icons/fa6";
+import { FaCircleArrowLeft as LeftArrow, FaCircleArrowRight as RightArrow, FaTable as UserTable, FaRegNewspaper as AnnouncementIcon } from "react-icons/fa6";
 
 import Image from "next/image";
 import AllUsersTable from "@/components/AllUsersTable";
 
+import TeachersForm from "./component/TeachersForm";
+import StudentsForm from "./component/StudentsForm";
+import SubjectForm from "./component/SubjectForm";
+import ParentsForm from "./component/ParentsForm";
+import EditUserForm from "./component/EditUserForm";
+
 interface UserData {
   first_name: string;
 }
+
+type studentMinibar = 'table' | 'student-form' | 'subject-form'
 
 const AdminPage = () => {
   const [teacherUsers, setTeacherUsers] = useState<any[]>([]);
@@ -53,9 +61,10 @@ const AdminPage = () => {
   const [subjectToAdd, setSubjectToAdd] = useState('')
 
   const [toggleSidebar, setToggleSidebar] = useState<boolean>(false)
-
-
-
+  const [teacherMinibar, setTeacherMinibar] = useState<boolean>(false)
+  const [studentMinibar, setStudentMinibar] = useState<studentMinibar>('table')
+  const [parentMinibar, setParentMinibar] = useState<boolean>(false)
+  const [announcementMinibar, setAnnouncementMinibar] = useState<boolean>(false)
 
   const handleAddSubject = async () => {
     const { data: initial, error } = await supabase
@@ -474,337 +483,106 @@ const AdminPage = () => {
                 {toggleSidebar && 'Edit User'}
               </div>
             </div>
-
           </div>
         </div>
       </nav>
+      {showAnnouncement && (
+        <div className={`${toggleSidebar && 'ml-[20rem]'} flex items-center justify-center gap-4`}>
+          <div className="flex items-center justify-between rounded-full w-[40vw] whitespace-nowrap md:text-xs xl:text-xl border-2 border-black duration-300 absolute bottom-[10%] left-[50%] translate-x-[-50%] translate-y-[50%] font-semibold shadow-2xl z-10">
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${!announcementMinibar && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 rounded-s-full cursor-pointer`} onClick={() => setAnnouncementMinibar(false)}>
+              <AnnouncementIcon className="text-2xl" />
+              Announcements
+            </div>
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${announcementMinibar && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 rounded-e-full cursor-pointer`} onClick={() => setAnnouncementMinibar(true)}>
+              <AddAnnouncementIcon className="text-2xl" />
+              Add Announcements
+            </div>
+          </div>
+
+          {!announcementMinibar ? (
+            <Announcement role='admin' className='absolute top-[55%] left-[50%] translate-x-[-50%] translate-y-[-50%]' />
+          ) : (
+            <AnnouncementAdmin />
+          )}
+        </div>
+      )}
+      
       {showTeachers && (
         <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
-          <TeachersTable teacherUsers={teacherUsers} />
-          <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div className="md:col-span-1">
-                <label htmlFor="firstName" className="block mb-1">
-                  First Name:
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div className="md:col-span-1">
-                <label htmlFor="userID" className="block mb-1">
-                  User ID:
-                </label>
-                <input
-                  type="text"
-                  id="userID"
-                  value={userID}
-                  onChange={(e) => setID(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div className="md:col-span-1">
-                <label htmlFor="middleName" className="block mb-1">
-                  Middle Name:
-                </label>
-                <input
-                  type="text"
-                  id="middleName"
-                  value={middleName}
-                  onChange={(e) => setMiddleName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
-                />
-              </div>
-              <div className="md:col-span-1">
-                <label htmlFor="password" className="block mb-1">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div className="md:col-span-1">
-                <label htmlFor="lastName" className="block mb-1">
-                  Last Name:
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400 mr-2"
-                />
-              </div>
+          <div className="flex items-center justify-between rounded-full w-[40vw] whitespace-nowrap md:text-xs xl:text-xl border-2 border-black duration-300 absolute bottom-[10%] left-[50%] translate-x-[-50%] translate-y-[50%] font-semibold text-xl shadow-2xl">
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${!teacherMinibar && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 rounded-s-full cursor-pointer`} onClick={() => setTeacherMinibar(false)}>
+              <UserTable className="text-2xl" />
+              Teachers' Table
             </div>
-            <div className="flex justify-between items-center mb-8">
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-              >
-                Add User
-              </button>
-              {error && <p className="text-red-600 mt-2">{error}</p>}
-
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${teacherMinibar && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 rounded-e-full cursor-pointer`} onClick={() => setTeacherMinibar(true)}>
+              <TeacherIcon className="text-2xl" />
+              Add Teachers
             </div>
-          </form>
+          </div>
+          
+          {!teacherMinibar ? (
+              <TeachersTable teacherUsers={teacherUsers} />
+          ) : (
+              <TeachersForm handleAddUser={handleAddUser} firstName={firstName} setFirstName={setFirstName} userID={userID} setID={setID} middleName={middleName} setMiddleName={setMiddleName} password={password} setPassword={setPassword} lastName={lastName} setLastName={setLastName} error={error} />
+          )}
         </div>
       )}
 
       {showStudents && (
         <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
-          <StudentsTable studentUsers={parentUsers} />
-          <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label htmlFor="firstName" className="block mb-1">
-                  First Name:
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="userID" className="block mb-1">
-                  User ID:
-                </label>
-                <input
-                  type="text"
-                  id="userID"
-                  value={userID}
-                  onChange={(e) => setID(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="middleName" className="block mb-1 ">
-                  Middle Name:
-                </label>
-                <input
-                  type="text"
-                  id="middleName"
-                  value={middleName}
-                  onChange={(e) => setMiddleName(e.target.value)}
-                  className="bg-zinc-200  text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block mb-1">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="lastName" className="block mb-1 ">
-                  Last Name:
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="bg-zinc-200  text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <select
-                value={gradeLevel}
-                onChange={(e) => setGradeLevel(e.target.value)}
-                className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                style={{ width: '215px', height: '40px' }} // Adjust the width here
-              >
-                <option value="">Select Grade</option>
-                <option value="11">Grade 11</option>
-                <option value="12">Grade 12</option>
-              </select>
-
+          <div className="flex items-center justify-between rounded-full w-[65vw] whitespace-nowrap md:text-xs xl:text-xl border-2 border-black duration-300 absolute bottom-[10%] left-[50%] translate-x-[-50%] translate-y-[50%] font-semibold text-xl shadow-2xl">
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${studentMinibar === 'table' && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 rounded-s-full cursor-pointer`} onClick={() => setStudentMinibar('table')}>
+              <UserTable className="text-2xl" />
+              Students' Table
             </div>
-            <div className="flex justify-between items-center mb-8">
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-              >
-                Add User
-              </button>
-              {error && <p className="text-red-600 mt-2">{error}</p>}
-
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${studentMinibar === 'student-form' && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 cursor-pointer`} onClick={() => setStudentMinibar('student-form')}>
+              <StudentIcon className="text-2xl" />
+              Add Students
             </div>
-          </form>
-
-          <div className="">
-            <input
-              type="text"
-              id="studentID"
-              name="studentID"
-              value={addSubjectStudent}
-              onChange={(e) => setAddSubjectStudent(e.target.value)}
-              placeholder="Enter StudentID"
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-
-            <input
-              type="text"
-              id="subjectToAdd"
-              name="subjectToAdd"
-              value={subjectToAdd}
-              onChange={(e) => setSubjectToAdd(e.target.value)}
-              placeholder="Enter Subject"
-              className="mt-2 mb-2 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-            <button className="border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2" onClick={handleAddSubject}>Add Subject</button>
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${studentMinibar === 'subject-form' && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 rounded-e-full cursor-pointer`} onClick={() => setStudentMinibar('subject-form')}>
+              <SubjectIcon className="text-2xl" />
+              Add Subjects
+            </div>
           </div>
+
+          {studentMinibar === 'table' ? (
+            <StudentsTable studentUsers={parentUsers} />
+          ) : studentMinibar === 'student-form' ? (
+            <StudentsForm handleAddUser={handleAddUser} firstName={firstName} setFirstName={setFirstName} userID={userID} setID={setID} middleName={middleName} setMiddleName={setMiddleName} password={password} setPassword={setPassword} lastName={lastName} setLastName={setLastName} gradeLevel={gradeLevel} setGradeLevel={setGradeLevel} error={error} />
+          ) : (
+            <SubjectForm addSubjectStudent={addSubjectStudent} setAddSubjectStudent={setAddSubjectStudent} subjectToAdd={subjectToAdd} setSubjectToAdd={setSubjectToAdd} handleAddSubject={handleAddSubject} />
+          )}
         </div>
       )}
 
       {showParents && (
         <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
-          <ParentsTable parentUsers={parentUsers} />
-          <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label htmlFor="firstName" className="block mb-1">
-                  First Name:
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="userID" className="block mb-1">
-                  User ID:
-                </label>
-                <input
-                  type="text"
-                  id="userID"
-                  value={userID}
-                  onChange={(e) => setID(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="middleName" className="block mb-1">
-                  Middle Name:
-                </label>
-                <input
-                  type="text"
-                  id="middleName"
-                  value={middleName}
-                  onChange={(e) => setMiddleName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block mb-1 ml-5">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="block mb-1">
-                  Last Name:
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600 ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="childID" className="block mb-1 ml-9">
-                  Child ID:
-                </label>
-                <input
-                  type="number"
-                  id="childID"
-                  value={childID}
-                  onChange={(e) => setChildID(e.target.value)}
-                  className="bg-zinc-200 text-zinc-600   ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300 placeholder:text-zinc-600 placeholder:opacity-50 rounded-full px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                />
-              </div>
+          <div className="flex items-center justify-between rounded-full w-[40vw] whitespace-nowrap md:text-xs xl:text-xl border-2 border-black duration-300 absolute bottom-[10%] left-[50%] translate-x-[-50%] translate-y-[50%] font-semibold text-xl shadow-2xl">
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${!parentMinibar && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 rounded-s-full cursor-pointer`} onClick={() => setParentMinibar(false)}>
+              <UserTable className="text-2xl" />
+              Parents' Table
             </div>
-            <div className="flex justify-between items-center mb-8">
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-              >
-                Add User
-              </button>
-              {error && <p className="text-red-600 mt-2">{error}</p>}
-
+            <div className={`flex items-center justify-center gap-4 w-[50%] h-full p-[1rem] ${parentMinibar && 'bg-[#332D2D] text-white'} hover:opacity-95 duration-100 rounded-e-full cursor-pointer`} onClick={() => setParentMinibar(true)}>
+              <ParentIcon className="text-2xl" />
+              Add Parents
             </div>
-          </form>
+          </div>
+          
+          {!parentMinibar ? (
+              <ParentsTable parentUsers={parentUsers} />
+          ) : (
+              <ParentsForm handleAddUser={handleAddUser} firstName={firstName} setFirstName={setFirstName} userID={userID} setID={setID} middleName={middleName} setMiddleName={setMiddleName} password={password} setPassword={setPassword} lastName={lastName} setLastName={setLastName} childID={childID} setChildID={setChildID} error={error} />
+          )}
         </div>
       )}
 
       {showDeleteUser && (
         <div className={`${toggleSidebar && 'ml-[20rem]'} container mx-auto p-4`}>
           <AllUsersTable allUsers={allUsers} />
-          <form onSubmit={handleAddUser} className="mb-8 mt-4 ml-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
-              <div className="">
-                <input
-                  type="text"
-                  placeholder="Enter User ID"
-                  value={deleteUserID}
-                  onChange={(e) => setDeleteUserID(e.target.value)}
-                  className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
-                />
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={handleDeleteUser}
-                    className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer mt-2"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={handleResetPassword}
-                    className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer mt-2"
-                  >
-                    Reset Password
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
+          <EditUserForm handleAddUser={handleAddUser} deleteUserID={deleteUserID} setDeleteUserID={setDeleteUserID} handleDeleteUser={handleDeleteUser} handleResetPassword={handleResetPassword} />
         </div>
       )}
 
-      {showAnnouncement && (
-        <div className={`${toggleSidebar && 'ml-[20rem]'} flex items-center justify-center gap-4`}>
-          <AnnouncementAdmin />
-          <Announcement role={'admin'} className={'absolute right-[10rem] bottom-0'} />
-        </div>
-      )}
       <button
         className="fixed bottom-4 right-4 border-none bg-red-500 rounded-md text-white uppercase font-semibold p-2 cursor-pointer bg-gradient-to-r from-[#EB3349] to-[#F45C43] px-6 py-2  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-10px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] focus:shadow-[inset_-12px_-8px_40px_#46464620] transition-shadow"
         onClick={handleLogout}

@@ -37,7 +37,10 @@ const AnnouncementAdmin = () => {
       };
 
   return (
-      <div className='w-[25%] h-[25%] absolute top-[50%] left-[30%] translate-x-[-30%] translate-y-[-50%]'>
+      <div className='flex flex-col gap-4 w-[25%] h-[25%] absolute top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%]'>
+        <div className='text-2xl font-semibold'>
+          Add Announcements
+        </div>
         <form
           onSubmit={handleSubmit}
           className="w-full max-w-1/4vw lg:max-w-xl mx-auto p-4 border rounded-lg shadow-md bg-white"

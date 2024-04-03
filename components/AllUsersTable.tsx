@@ -16,6 +16,7 @@ const AllUsersTable = ({ allUsers }: any) => {
                   <th scope="col" className="px-6 py-4">Last Name</th>
                   <th scope="col" className="px-6 py-4">Contact Number</th>
                   <th scope="col" className="px-6 py-4">Role</th>
+                  <th scope="col" className="px-6 py-4">Child ID "For Parents Only"</th>
 
                 </tr>
               </thead>
@@ -29,6 +30,7 @@ const AllUsersTable = ({ allUsers }: any) => {
                     <td className="whitespace-nowrap px-6 py-4">{user.last_name}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.contact_number}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.role}</td>
+                    <td className="whitespace-nowrap px-6 py-4">{user.children}</td>
                   </tr>
                 ))}
               </tbody>

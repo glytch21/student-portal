@@ -375,6 +375,16 @@ const AdminPage = () => {
             throw imageError;
           }
         }
+        // if (role === 'parent') {
+        //   const { error } = await supabase
+        //   .from("user_table")
+        //   .delete()
+        //   .eq("user_id", deleteUserID);
+
+        //   if (error) {
+        //     throw error;
+        //   }
+        // }
         // Delete the user from the user_table
         const { error } = await supabase
           .from("user_table")
@@ -546,7 +556,7 @@ const AdminPage = () => {
           </div>
 
           {studentMinibar === 'table' ? (
-            <StudentsTable studentUsers={parentUsers} />
+            <StudentsTable studentUsers={studentUsers} />
           ) : studentMinibar === 'student-form' ? (
             <StudentsForm handleAddUser={handleAddUser} firstName={firstName} setFirstName={setFirstName} userID={userID} setID={setID} middleName={middleName} setMiddleName={setMiddleName} password={password} setPassword={setPassword} lastName={lastName} setLastName={setLastName} gradeLevel={gradeLevel} setGradeLevel={setGradeLevel} error={error} />
           ) : (

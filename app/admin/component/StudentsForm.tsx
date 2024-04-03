@@ -22,7 +22,7 @@ const StudentsForm = ({ handleAddUser, firstName, setFirstName, userID, setID, m
                   User ID:
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="userID"
                   value={userID}
                   onChange={(e) => setID(e.target.value)}

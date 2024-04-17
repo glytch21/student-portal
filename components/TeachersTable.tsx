@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
+import AssignSubject from './AssignSubject'; // Import the AssignSubject component
 
-const TeachersTable = ({ teacherUsers }: any) => {
+const TeachersTable = ({ teacherUsers }:any) => {
+  const [showAssignSubject, setShowAssignSubject] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  // Function to toggle the AssignSubject component visibility
+  const toggleAssignSubject = (user:any) => {
+    setSelectedUser(user); // Set the selected user
+    setShowAssignSubject(true); // Show the AssignSubject component
+  };
+
   return (
     <div className="flex flex-col">
       <div className='text-2xl font-semibold'>
@@ -17,6 +27,7 @@ const TeachersTable = ({ teacherUsers }: any) => {
                   <th scope="col" className="px-6 py-4">First Name</th>
                   <th scope="col" className="px-6 py-4">Middle Name</th>
                   <th scope="col" className="px-6 py-4">Last Name</th>
+                  <th scope="col" className="px-6 py-4">Assign Subject</th> {/* New column */}
                 </tr>
               </thead>
               <tbody>
@@ -27,6 +38,11 @@ const TeachersTable = ({ teacherUsers }: any) => {
                     <td className="whitespace-nowrap px-6 py-4">{user.first_name}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.middle_name}</td>
                     <td className="whitespace-nowrap px-6 py-4">{user.last_name}</td>
+
+                    <td className="whitespace-nowrap px-6 py-4">
+                      {/* Button to open AssignSubject component */}
+                      <button className="btn-action" onClick={() => toggleAssignSubject(user)}>Assign Subject</button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -34,8 +50,10 @@ const TeachersTable = ({ teacherUsers }: any) => {
           </div>
         </div>
       </div>
+      {/* Conditional rendering of AssignSubject component */}
+      {showAssignSubject && <AssignSubject user={selectedUser} onClose={() => setShowAssignSubject(false)} />}
     </div>
-  )
+  );
 };
 
 export default TeachersTable;

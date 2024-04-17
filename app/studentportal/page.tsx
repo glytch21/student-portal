@@ -246,6 +246,14 @@ const StudentsPage = () => {
                       <p className="text-left text-lg text-gray-600">Contact Number: {userData.contact_number}</p>
                     </div>
                     {/* Update Profile Button */}
+                    {userData.grade_level === '12' && (
+                    <div className="mb-4">
+                      <p className="text-left text-lg text-gray-600">Section: Euler</p>
+                    </div>)}
+                    {userData.grade_level === '11' && (
+                    <div className="mb-4">
+                      <p className="text-left text-lg text-gray-600">Section: Einstein</p>
+                    </div>)}
                     <button
                       onClick={handleOpenProfileModal}
                       className="absolute bottom-6 left-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600"
